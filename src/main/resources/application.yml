@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    active:
+      - dev
+    group:
+      dev:
+        - db
+        - dev
+  messages:
+    basename: i18n/messages
+    encoding: UTF-8
+    cache-duration: PT1H

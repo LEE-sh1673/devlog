@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class DevlogApplication {
 
     public static void main(String[] args) {
+        System.out.println("DevlogApplication.main");
         SpringApplication.run(DevlogApplication.class, args);
     }
 

@@ -30,4 +30,15 @@ public class Post {
         this.title = title;
         this.content = content;
     }
+
+    public PostEditor.PostEditorBuilder toEditor() {
+        return PostEditor.builder()
+            .title(title)
+            .content(content);
+    }
+
+    public void edit(final PostEditor postEditor) {
+        this.title = postEditor.getTitle();
+        this.content = postEditor.getContent();
+    }
 }

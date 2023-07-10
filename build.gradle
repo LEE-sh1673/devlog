@@ -1,6 +1,10 @@
 buildscript {
     ext {
         commonsLang3Version = '3.12.0'
+        asciidoctorVersion = '3.3.2'
+        springRestDocsVersion = '2.0.6.RELEASE'
+        snippetsDir = file('build/generated-snippets')
+        restDocsDir = file('src/main/resources/static/docs')
     }
 }
 
@@ -8,6 +12,14 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.13'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'org.asciidoctor.jvm.convert' version "$asciidoctorVersion"
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    asciidoctorExt
 }
 
 group = 'com.devlog'
@@ -16,25 +28,12 @@ version = '0.0.1-SNAPSHOT'
 java {
     sourceCompatibility = '11'
 }
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-
-    // query dsl
-    implementation 'com.querydsl:querydsl-core'
-    implementation 'com.querydsl:querydsl-jpa'
-
-    annotationProcessor  "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
-    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -45,21 +44,62 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    //=== query dsl
+    implementation 'com.querydsl:querydsl-core'
+    implementation 'com.querydsl:querydsl-jpa'
 
-    // lang3 for api error handling
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    //===
+
+    //=== spring rest docs
+    asciidoctorExt "org.springframework.restdocs:spring-restdocs-asciidoctor:$springRestDocsVersion"
+    testImplementation "org.springframework.restdocs:spring-restdocs-mockmvc:$springRestDocsVersion"
+    //===
+
+    //=== lang3 for api error handling
     implementation "org.apache.commons:commons-lang3:$commonsLang3Version"
+    //===
 }
 
 test {
+    outputs.dir snippetsDir
     useJUnitPlatform()
+}
+
+asciidoctor {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExt'
+    dependsOn test
+}
+
+asciidoctor.doFirst {
+    println("---------------- delete present asciidoctor.")
+    delete restDocsDir
+}
+
+asciidoctor.doLast {
+    println("---------------- asciidoctor is deleted!")
 }
 
 /** clean 태스크 실행시 QClass 삭제 */
 clean {
-    delete file('src/main/generated') // 인텔리제이 Annotation processor 생성물 생성위치
+    delete file('src/main/generated')
 }
 
-bootRun {
-    String activeProfile = System.properties['spring.profiles.active']
-    systemProperty "spring.profiles.active", activeProfile
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file(asciidoctor.outputDir)
+    into restDocsDir
+}
+
+build {
+    dependsOn copyDocument
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from file(asciidoctor.outputDir)
+    into restDocsDir
 }

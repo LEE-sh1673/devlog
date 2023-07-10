@@ -1,4 +1,4 @@
-package com.devlog.controller;
+package com.devlog.errors;
 
 import static com.devlog.utils.ApiUtils.*;
 
@@ -11,7 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.devlog.errors.NotFoundException;
+import com.devlog.errors.v1.DevlogException;
 import com.devlog.response.ErrorResponse;
 import com.devlog.utils.ApiUtils;
 
@@ -19,12 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestControllerAdvice
-public class ExceptionController {
+public class GeneralExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> invalidRequestLectureHandler(final MethodArgumentNotValidException e) {
-        log.debug("Bad request exception occurred: {}", e.getMessage(), e);
-
+    public ResponseEntity<?> handleBadRequestException(final MethodArgumentNotValidException e) {
         ErrorResponse response = ErrorResponse.builder()
             .code("400")
             .message("잘못된 요청입니다.")
@@ -33,16 +31,22 @@ public class ExceptionController {
         for (FieldError fieldError : e.getFieldErrors()) {
             response.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
         }
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(response);
     }
 
-    @ExceptionHandler({NotFoundException.class})
-    public ResponseEntity<?> handleNotFoundException(Exception e) {
-        return newResponse(e, HttpStatus.NOT_FOUND);
-    }
+    @ExceptionHandler(DevlogException.class)
+    public ResponseEntity<ErrorResponse> handleDevlogException(final DevlogException e) {
+        ErrorResponse body = ErrorResponse.builder()
+            .code(String.valueOf(e.statusCode()))
+            .message(e.getMessage())
+            .validation(e.getValidation())
+            .build();
 
-    private ResponseEntity<ApiUtils.ApiResult<?>> newResponse(Throwable throwable, HttpStatus status) {
-        return newResponse(throwable.getMessage(), status);
+        return ResponseEntity
+            .status(e.statusCode())
+            .body(body);
     }
 
     private ResponseEntity<ApiUtils.ApiResult<?>> newResponse(
@@ -51,6 +55,10 @@ public class ExceptionController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        return new ResponseEntity<>(error(message, status), headers, status);
+
+        return ResponseEntity
+            .status(status)
+            .headers(headers)
+            .body(error(message, status));
     }
 }

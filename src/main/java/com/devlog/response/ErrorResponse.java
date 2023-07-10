@@ -1,7 +1,9 @@
 package com.devlog.response;
 
-import java.util.ArrayList;
-import java.util.List;
+import static java.util.Objects.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -24,33 +26,17 @@ public class ErrorResponse {
 
     private final String message;
 
-    private final List<FieldError> validation = new ArrayList<>();
+    private final Map<String, String> validation;
 
     @Builder
-    public ErrorResponse(String code, String message) {
+    public ErrorResponse(final String code,
+        final String message, final Map<String, String> validation) {
         this.code = code;
         this.message = message;
+        this.validation = requireNonNullElse(validation, new HashMap<>());
     }
 
     public void addValidation(final String fieldName, final String errorMessage) {
-        FieldError fieldError = FieldError.builder()
-            .fieldName(fieldName)
-            .errorMessage(errorMessage)
-            .build();
-        validation.add(fieldError);
-    }
-
-    @Getter
-    private static class FieldError {
-
-        private final String fieldName;
-
-        private final String errorMessage;
-
-        @Builder
-        public FieldError(String fieldName, String errorMessage) {
-            this.fieldName = fieldName;
-            this.errorMessage = errorMessage;
-        }
+        validation.put(fieldName, errorMessage);
     }
 }

@@ -41,25 +41,27 @@ const edit = () => {
         type="text"
         v-model="post.title"
         clearable
-        maxlength="30"
+        maxlength="50"
         show-word-limit
         placeholder="제목을 입력해주세요."
     />
   </div>
 
-  <div class="mt-2">
+  <div class="mt-3">
     <el-input
         type="textarea"
         v-model="post.content"
-        maxlength="300"
+        maxlength="1000"
         show-word-limit
         placeholder="본문을 입력해주세요."
         :autosize="{ minRows: 15, maxRows: 4 }"
     />
   </div>
 
-  <div class="mt-2">
+  <div class="mt-3">
+    <div class="d-flex justify-content-end">
     <el-button type="warning" @click="edit()">글 수정완료</el-button>
+    </div>
   </div>
 
 </template>

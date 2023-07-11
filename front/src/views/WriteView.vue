@@ -15,8 +15,8 @@ const write = () => {
     content: content.value
   };
   axios.post("/api/posts", requestBody)
-      .then(() => router.replace({name: "home"}))
-      .catch((error) => console.log(error));
+  .then(() => router.replace({name: "home"}))
+  .catch((error) => console.log(error));
 }
 </script>
 
@@ -27,25 +27,27 @@ const write = () => {
         type="text"
         v-model="title"
         clearable
-        maxlength="30"
+        maxlength="50"
         show-word-limit
         placeholder="제목을 입력해주세요."
     />
   </div>
 
-  <div class="mt-2">
+  <div class="mt-3">
     <el-input
         type="textarea"
         v-model="content"
-        maxlength="300"
+        maxlength="1000"
         show-word-limit
         placeholder="본문을 입력해주세요."
         :autosize="{ minRows: 15, maxRows: 4 }"
     />
   </div>
 
-  <div class="mt-2">
-    <el-button type="primary" @click="write()">글 작성완료</el-button>
+  <div class="mt-3">
+    <div class="d-flex justify-content-end">
+      <el-button type="primary" @click="write()">글 작성완료</el-button>
+    </div>
   </div>
 
 </template>

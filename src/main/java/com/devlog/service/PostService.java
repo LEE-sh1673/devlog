@@ -1,9 +1,8 @@
 package com.devlog.service;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +13,7 @@ import com.devlog.repository.PostRepository;
 import com.devlog.request.PostCreate;
 import com.devlog.request.PostEdit;
 import com.devlog.request.PostSearch;
+import com.devlog.response.PageResponse;
 import com.devlog.response.PostResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -38,10 +38,11 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponse> findAll(final PostSearch postSearch) {
-        return postRepository.findAll(postSearch).stream()
-            .map(PostResponse::new)
-            .collect(Collectors.toList());
+    public PageResponse findAll(final PostSearch postSearch) {
+        Page<PostResponse> posts = postRepository.findAll(postSearch);
+        PageResponse pageResponse = new PageResponse(posts);
+        System.out.println("pageResponse = " + pageResponse);
+        return pageResponse;
     }
 
     @Transactional

@@ -165,11 +165,15 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("글 작성시 제목은 10글자 이하여야 한다.")
+    @DisplayName("글 작성시 제목은 50글자 이하여야 한다.")
     void test3() throws Exception {
+
+        String inputTitle = "12345".repeat(11);
+        String expectedTitle =  "12345".repeat(10);
+
         // given
         Post post = postRepository.save(Post.builder()
-            .title("123456789012345")
+            .title(inputTitle)
             .content("글 본문")
             .build());
 
@@ -183,7 +187,7 @@ class PostControllerTest {
         // then
         result.andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.response.title", is("1234567890")));
+            .andExpect(jsonPath("$.response.title", is(expectedTitle)));
     }
 
     @Test
@@ -211,14 +215,14 @@ class PostControllerTest {
         result.andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.success", is(true)))
-            .andExpect(jsonPath("$.response").isArray())
-            .andExpect(jsonPath("$.response.length()", is(2)))
-            .andExpect(jsonPath("$.response[0].id").value(posts.get(1).getId()))
-            .andExpect(jsonPath("$.response[0].title", is(posts.get(1).getTitle())))
-            .andExpect(jsonPath("$.response[0].content", is(posts.get(1).getContent())))
-            .andExpect(jsonPath("$.response[1].id").value(posts.get(0).getId()))
-            .andExpect(jsonPath("$.response[1].title", is(posts.get(0).getTitle())))
-            .andExpect(jsonPath("$.response[1].content", is(posts.get(0).getContent())));
+            .andExpect(jsonPath("$.response.posts").isArray())
+            .andExpect(jsonPath("$.response.posts.length()", is(2)))
+            .andExpect(jsonPath("$.response.posts[0].id").value(posts.get(1).getId()))
+            .andExpect(jsonPath("$.response.posts[0].title", is(posts.get(1).getTitle())))
+            .andExpect(jsonPath("$.response.posts[0].content", is(posts.get(1).getContent())))
+            .andExpect(jsonPath("$.response.posts[1].id").value(posts.get(0).getId()))
+            .andExpect(jsonPath("$.response.posts[1].title", is(posts.get(0).getTitle())))
+            .andExpect(jsonPath("$.response.posts[1].content", is(posts.get(0).getContent())));
     }
 
     @Test
@@ -246,11 +250,11 @@ class PostControllerTest {
         // then
         result.andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.response").isArray())
-            .andExpect(jsonPath("$.response.length()", is(10)))
-            .andExpect(jsonPath("$.response[0].id").value(posts.get(29).getId()))
-            .andExpect(jsonPath("$.response[0].title", is("제목 30")))
-            .andExpect(jsonPath("$.response[0].content", is("본문 30")));
+            .andExpect(jsonPath("$.response.posts").isArray())
+            .andExpect(jsonPath("$.response.posts.length()", is(10)))
+            .andExpect(jsonPath("$.response.posts[0].id").value(posts.get(29).getId()))
+            .andExpect(jsonPath("$.response.posts[0].title", is("제목 30")))
+            .andExpect(jsonPath("$.response.posts[0].content", is("본문 30")));
     }
 
     @Test
@@ -278,11 +282,11 @@ class PostControllerTest {
         // then
         result.andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.response").isArray())
-            .andExpect(jsonPath("$.response.length()", is(10)))
-            .andExpect(jsonPath("$.response[0].id").value(posts.get(29).getId()))
-            .andExpect(jsonPath("$.response[0].title", is("제목 30")))
-            .andExpect(jsonPath("$.response[0].content", is("본문 30")));
+            .andExpect(jsonPath("$.response.posts").isArray())
+            .andExpect(jsonPath("$.response.posts.length()", is(10)))
+            .andExpect(jsonPath("$.response.posts[0].id").value(posts.get(29).getId()))
+            .andExpect(jsonPath("$.response.posts[0].title", is("제목 30")))
+            .andExpect(jsonPath("$.response.posts[0].content", is("본문 30")));
     }
 
     @Test

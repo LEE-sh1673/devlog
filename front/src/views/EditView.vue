@@ -3,6 +3,7 @@
 import {defineProps, onMounted, ref} from "vue";
 import axios from "axios";
 import {useRouter} from "vue-router";
+import {ElMessage} from "element-plus";
 
 const router = useRouter();
 
@@ -27,8 +28,18 @@ onMounted(() => {
 });
 
 const edit = () => {
+  console.log(post.value);
+
   axios.patch(`/api/posts/${props.postId}`, post.value)
-      .then(() => router.replace({ name: 'read', params: {postId: props.postId} }))
+      .then(() => {
+        router.replace({ name: 'read', params: {postId: props.postId} });
+        ElMessage({
+          message: '수정되었습니다.',
+          type: 'success',
+          duration: 2000,
+          showClose: true
+        });
+      })
       .catch((error) => console.log(error));
 };
 

@@ -1,11 +1,11 @@
 package com.devlog.repository;
 
-import java.util.List;
+import org.springframework.data.domain.Page;
 
-import com.devlog.domain.Post;
 import com.devlog.request.PostSearch;
+import com.devlog.response.PostResponse;
 
 public interface PostRepositoryCustom {
 
-    List<Post> findAll(final PostSearch postSearch);
+    Page<PostResponse> findAll(final PostSearch postSearch);
 }

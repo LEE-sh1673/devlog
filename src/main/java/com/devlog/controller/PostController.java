@@ -2,8 +2,6 @@ package com.devlog.controller;
 
 import static com.devlog.utils.ApiUtils.*;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.devlog.request.PostCreate;
 import com.devlog.request.PostEdit;
 import com.devlog.request.PostSearch;
+import com.devlog.response.PageResponse;
 import com.devlog.response.PostResponse;
 import com.devlog.service.PostService;
 import com.devlog.utils.ApiUtils;
@@ -43,7 +42,7 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ApiUtils.ApiResult<List<PostResponse>> findAll(@ModelAttribute final PostSearch postSearch) {
+    public ApiUtils.ApiResult<PageResponse> findAll(@ModelAttribute final PostSearch postSearch) {
         return success(postService.findAll(postSearch));
     }
 

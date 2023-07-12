@@ -5,6 +5,7 @@ import static org.apache.commons.lang3.builder.ToStringStyle.*;
 import java.util.Objects;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.springframework.data.domain.PageRequest;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -31,6 +32,10 @@ public class PostSearch {
     public long getOffset() {
         return (long)(Math.max(INITIAL_PAGE_NUMBER, page) - 1)
             * Math.min(size, MAXIMUM_PAGE_SIZE);
+    }
+
+    public PageRequest toPageRequest() {
+        return PageRequest.of(Math.max(INITIAL_PAGE_NUMBER, page) - 1, size);
     }
 
     @Override

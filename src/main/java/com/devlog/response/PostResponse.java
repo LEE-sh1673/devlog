@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class PostResponse {
 
-    private static final int TRUNCATE_THRESHOLD = 10;
+    private static final int TRUNCATE_THRESHOLD = 50;
 
     private final Long id;
 

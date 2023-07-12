@@ -1,23 +1,39 @@
 <script setup lang="ts">
 
 import axios from "axios";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
+
+const pageNumber = ref(1);
+const pageSize = ref(5);
 
 const router = useRouter();
 const posts = ref([]);
 const loading = ref(true);
 
-axios.get("/api/posts")
-.then((response) => {
-  response.data.response.forEach(post => posts.value.push(post));
-  loading.value = false;
-})
-.catch((error) => console.log(error));
+onMounted(() => movePage());
+
+const movePage = () => {
+  axios
+      .get("/api/posts",
+      { params: { page: pageNumber.value, size: pageSize.value } }
+      )
+      .then((response) => {
+        posts.value.length = 0;
+        response.data.response.forEach(post => posts.value.push(post));
+        loading.value = false;
+      })
+      .catch((error) => console.log(error));
+}
 
 const moveToRead = () => {
   router.push({name: "read"});
 };
+
+const changePage = (page: Number) => {
+  pageNumber.value = page;
+  movePage();
+}
 </script>
 
 <template>
@@ -42,6 +58,12 @@ const moveToRead = () => {
 
     </li>
   </ul>
+
+  <el-pagination @current-change="changePage"
+                 :total="100"
+                 :page-size="pageSize"
+                 layout="prev, pager, next"
+  />
 </template>
 
 <style scoped lang="scss">
@@ -61,7 +83,7 @@ ul.posts {
   padding: 0;
 
   li {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 
     &:last-child {
       margin-bottom: 0;
@@ -78,8 +100,9 @@ ul.posts {
     }
 
     .content {
+      font-size: 0.875rem;
       margin-top: 8px;
-      overflow:hidden;
+      overflow: hidden;
       max-height: 8rem;
       -webkit-box-orient: vertical;
       display: block;

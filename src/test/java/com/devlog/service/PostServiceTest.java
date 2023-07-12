@@ -20,6 +20,7 @@ import com.devlog.repository.PostRepository;
 import com.devlog.request.PostCreate;
 import com.devlog.request.PostEdit;
 import com.devlog.request.PostSearch;
+import com.devlog.response.PageResponse;
 import com.devlog.response.PostResponse;
 
 @Transactional
@@ -97,13 +98,17 @@ class PostServiceTest {
         postRepository.saveAll(posts);
 
         // when
-        List<PostResponse> postResponses = postService.findAll(
+        PageResponse postResponses = postService.findAll(
             PostSearch.builder().build()
         );
 
         // then
-        assertEquals(10L, postResponses.size());
-        assertEquals("제목 20", postResponses.get(0).getTitle());
+        assertEquals(0, postResponses.getPageNo());
+        assertEquals(2, postResponses.getTotalPages());
+        assertEquals(10L, postResponses.getPageSize());
+        assertEquals(20L, postResponses.getTotalElements());
+        assertEquals("제목 20", postResponses.getPosts().get(0).getTitle());
+        assertFalse(postResponses.isLast());
     }
 
     @Test

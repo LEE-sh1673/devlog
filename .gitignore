@@ -38,8 +38,4 @@ out/
 
 ### nodeenv ###
 nodeenv-16
-
-/package.json
-/package-lock.json
-
 node_modules

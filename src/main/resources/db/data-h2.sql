@@ -1,3 +1,10 @@
-INSERT INTO post (title, content) VALUES ('글 제목', '글 본문');
+INSERT INTO post (title, content) VALUES ('글 제목 1', '글 본문 1');
 INSERT INTO post (title, content) VALUES ('글 제목 2', '글 본문 2');
 INSERT INTO post (title, content) VALUES ('글 제목 3', '글 본문 3');
+INSERT INTO post (title, content) VALUES ('글 제목 4', '글 본문 4');
+INSERT INTO post (title, content) VALUES ('글 제목 5', '글 본문 5');
+INSERT INTO post (title, content) VALUES ('글 제목 6', '글 본문 6');
+INSERT INTO post (title, content) VALUES ('글 제목 7', '글 본문 7');
+INSERT INTO post (title, content) VALUES ('글 제목 8', '글 본문 8');
+INSERT INTO post (title, content) VALUES ('글 제목 9', '글 본문 9');
+INSERT INTO post (title, content) VALUES ('글 제목 10', '글 본문 10');

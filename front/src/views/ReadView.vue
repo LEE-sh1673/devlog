@@ -25,12 +25,10 @@ const loading = ref(true);
 onMounted(() => {
   axios.get(`/api/posts/${props.postId}`)
       .then((response) => {
-        // post.value = response.data.response;
-        // loading.value = false;
         setInterval(() => {
           post.value = response.data.response;
           loading.value = false;
-        }, 1000);
+        }, 200);
       }).catch((error) => console.log(error));
 });
 

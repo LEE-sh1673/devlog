@@ -4,8 +4,9 @@ import axios from "axios";
 import {onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
 
-const pageNumber = ref(1);
+const pageNumber = ref(0);
 const pageSize = ref(5);
+const totalElements = ref(0);
 
 const router = useRouter();
 const posts = ref([]);
@@ -19,8 +20,14 @@ const movePage = () => {
       { params: { page: pageNumber.value, size: pageSize.value } }
       )
       .then((response) => {
+        const res = response.data.response;
+
         posts.value.length = 0;
-        response.data.response.forEach(post => posts.value.push(post));
+        res.posts.forEach(post => posts.value.push(post));
+        pageNumber.value = res.pageNo;
+        pageSize.value = res.pageSize;
+        totalElements.value = res.totalElements;
+
         loading.value = false;
       })
       .catch((error) => console.log(error));
@@ -37,7 +44,7 @@ const changePage = (page: Number) => {
 </script>
 
 <template>
-  <p class="nums__post">전체 글 <span>{{ posts.length }}</span> 개</p>
+  <p class="nums__post">전체 글 <span>{{ totalElements }}</span> 개</p>
   <ul class="posts" v-loading="loading">
     <li v-for="post in posts" :key="post.id" @click="moveToRead()">
       <div class="title">
@@ -60,10 +67,9 @@ const changePage = (page: Number) => {
   </ul>
 
   <el-pagination @current-change="changePage"
-                 :total="100"
+                 :total="totalElements"
                  :page-size="pageSize"
-                 layout="prev, pager, next"
-  />
+                 layout="prev, pager, next"/>
 </template>
 
 <style scoped lang="scss">

@@ -1,11 +1,9 @@
 package com.devlog.request;
 
-import static org.apache.commons.lang3.builder.ToStringStyle.*;
-
 import java.util.Objects;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -23,10 +21,22 @@ public class PostSearch {
 
     private final int size;
 
+    private final Sort sort;
+
     @Builder
-    public PostSearch(final Integer page, final Integer size) {
-        this.page =  Objects.requireNonNullElse(page, INITIAL_PAGE_NUMBER);
+    public PostSearch(final Integer page, final Integer size,
+        final Sort.Direction direction, final String... properties) {
+
+        this.page = Objects.requireNonNullElse(page, INITIAL_PAGE_NUMBER);
         this.size = Objects.requireNonNullElse(size, DEFAULT_PAGE_SIZE);
+        this.sort = mapSort(direction, properties);
+    }
+
+    private Sort mapSort(final Sort.Direction direction, final String... properties) {
+        return Sort.by(
+            direction == null ? Sort.Direction.DESC : direction,
+            properties == null ? new String[] {"id"} : properties
+        );
     }
 
     public long getOffset() {
@@ -35,14 +45,10 @@ public class PostSearch {
     }
 
     public PageRequest toPageRequest() {
-        return PageRequest.of(Math.max(INITIAL_PAGE_NUMBER, page) - 1, size);
+        return PageRequest.of(Math.max(INITIAL_PAGE_NUMBER, page) - 1, size, sort);
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, SHORT_PREFIX_STYLE)
-            .append("page", page)
-            .append("size", size)
-            .toString();
+    public boolean isUnsorted() {
+        return sort.isUnsorted();
     }
 }

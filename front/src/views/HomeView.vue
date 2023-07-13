@@ -1,43 +1,40 @@
 <script setup lang="ts">
 
 import axios from "axios";
-import { onMounted, ref } from "vue";
-import {useRoute, useRouter} from "vue-router";
+import {onMounted, ref} from "vue";
 
 const pageNumber = ref(0);
-const pageSize = ref(0);
+const pageSize = ref(4);
 const totalElements = ref(0);
-
-const router = useRouter();
-const route = useRoute();
 const posts: any = ref([]);
-const loading = ref(true);
 
-const fetchPosts = () => {
+onMounted(() => {
+  fetchPosts(pageNumber.value, pageSize.value);
+});
+
+const fetchPosts = (page: number, size: number) => {
   axios
-  .get("/posts", {params: {page: route.query.page, size: route.query.size}})
-  .then((response) => {
-    const res = response.data.response;
-    posts.value = res.posts;
-    pageNumber.value = res.pageNo;
-    pageSize.value = res.pageSize;
-    totalElements.value = res.totalElements;
-    loading.value = false;
-  })
-  .catch((error) => console.log(error));
-};
+      .get("/posts", {params: {page: page, size: size}})
+      .then((response) => initPages(response.data.response))
+      .catch((error) => console.log(error));
+}
 
-onMounted(fetchPosts);
+const initPages = (res : any) => {
+  posts.value = res.posts;
+  pageNumber.value = res.pageNo;
+  pageSize.value = res.pageSize;
+  totalElements.value = res.totalElements;
+}
 
 const changePage = (page: number) => {
   pageNumber.value = page;
-  router.push({name: "home", query: {page: pageNumber.value, size: pageSize.value}});
+  fetchPosts(pageNumber.value, pageSize.value);
 };
 </script>
 
 <template>
   <p class="nums__post">전체 글 <span>{{ totalElements }}</span> 개</p>
-  <ul class="posts" v-loading="loading">
+  <ul class="posts">
     <li v-for="post in posts" :key="post!.id">
       <div class="title">
         <router-link :to="{ name: 'read', params: {postId: post!.id} }">

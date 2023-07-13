@@ -43,7 +43,6 @@ public class PostController {
 
     @GetMapping("/posts")
     public ApiUtils.ApiResult<PageResponse> findAll(@ModelAttribute final PostSearch postSearch) {
-        System.out.println("postSearch = " + postSearch);
         return success(postService.findAll(postSearch));
     }
 

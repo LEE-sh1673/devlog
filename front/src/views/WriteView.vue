@@ -2,7 +2,7 @@
 import {ref} from "vue";
 import axios from "axios";
 import {useRouter} from "vue-router";
-import {ElMessage} from "element-plus";
+import { ElMessage } from "element-plus";
 
 const title = ref('');
 const content = ref('');
@@ -15,7 +15,7 @@ const write = () => {
     title: title.value,
     content: content.value
   };
-  axios.post("/api/posts", requestBody)
+  axios.post("/posts", requestBody)
       .then(() => {
         router.replace({name: "home"});
         ElMessage({

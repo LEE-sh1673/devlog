@@ -1,60 +1,52 @@
 <script setup lang="ts">
 
 import axios from "axios";
-import {onMounted, ref} from "vue";
-import {useRouter} from "vue-router";
+import { onMounted, ref } from "vue";
+import {useRoute, useRouter} from "vue-router";
 
 const pageNumber = ref(0);
-const pageSize = ref(5);
+const pageSize = ref(0);
 const totalElements = ref(0);
 
 const router = useRouter();
-const posts = ref([]);
+const route = useRoute();
+const posts: any = ref([]);
 const loading = ref(true);
 
-onMounted(() => movePage());
-
-const movePage = () => {
+const fetchPosts = () => {
   axios
-      .get("/api/posts",
-      { params: { page: pageNumber.value, size: pageSize.value } }
-      )
-      .then((response) => {
-        const res = response.data.response;
-
-        posts.value.length = 0;
-        res.posts.forEach(post => posts.value.push(post));
-        pageNumber.value = res.pageNo;
-        pageSize.value = res.pageSize;
-        totalElements.value = res.totalElements;
-
-        loading.value = false;
-      })
-      .catch((error) => console.log(error));
-}
-
-const moveToRead = () => {
-  router.push({name: "read"});
+  .get("/posts", {params: {page: route.query.page, size: route.query.size}})
+  .then((response) => {
+    const res = response.data.response;
+    posts.value = res.posts;
+    pageNumber.value = res.pageNo;
+    pageSize.value = res.pageSize;
+    totalElements.value = res.totalElements;
+    loading.value = false;
+  })
+  .catch((error) => console.log(error));
 };
 
-const changePage = (page: Number) => {
+onMounted(fetchPosts);
+
+const changePage = (page: number) => {
   pageNumber.value = page;
-  movePage();
-}
+  router.push({name: "home", query: {page: pageNumber.value, size: pageSize.value}});
+};
 </script>
 
 <template>
   <p class="nums__post">전체 글 <span>{{ totalElements }}</span> 개</p>
   <ul class="posts" v-loading="loading">
-    <li v-for="post in posts" :key="post.id" @click="moveToRead()">
+    <li v-for="post in posts" :key="post!.id">
       <div class="title">
-        <router-link :to="{ name: 'read', params: {postId: post.id} }">
-          {{ post.title }}
+        <router-link :to="{ name: 'read', params: {postId: post!.id} }">
+          {{ post!.title }}
         </router-link>
       </div>
 
       <div class="content">
-        {{ post.content }}
+        {{ post!.content }}
       </div>
 
       <div class="sub d-flex gap-2 align-items-center">

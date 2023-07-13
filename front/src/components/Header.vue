@@ -37,8 +37,8 @@ import {Edit, HomeFilled} from "@element-plus/icons-vue";
 
 const router = useRouter();
 
-const menuSelect = (index: String) => {
-  router.push({ name: index });
+const menuSelect = (index: string) => {
+  router.push({ name : index });
 }
 </script>
 

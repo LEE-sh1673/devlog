@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
-import {defineProps, onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 import axios from "axios";
 import {useRouter} from "vue-router";
-import {ElMessage} from "element-plus";
+import { ElMessage } from "element-plus";
 
 const router = useRouter();
 
@@ -21,16 +21,18 @@ const post = ref({
 });
 
 onMounted(() => {
-  axios
-      .get(`/api/posts/${props.postId}`)
-      .then((response) => post.value = response.data.response)
-      .catch((error) => console.log(error));
+  axios({
+    baseURL: `/posts/${props.postId}`,
+    method: 'GET'
+  })
+  .then((response) => post.value = response.data.response)
+  .catch((error) => console.log(error));
 });
 
 const edit = () => {
   console.log(post.value);
 
-  axios.patch(`/api/posts/${props.postId}`, post.value)
+  axios.patch(`/posts/${props.postId}`, post.value)
       .then(() => {
         router.replace({ name: 'read', params: {postId: props.postId} });
         ElMessage({

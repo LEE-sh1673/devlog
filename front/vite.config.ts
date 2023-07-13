@@ -6,6 +6,9 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    outDir: "../src/main/resources/static"
+  },
   server: {
     port: 3000,
     proxy: {

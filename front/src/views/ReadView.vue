@@ -1,16 +1,16 @@
 <script setup lang="ts">
 
-import {defineProps, onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 import axios from "axios";
 import {useRouter} from "vue-router";
-import {ElMessage, ElMessageBox} from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 
 const router = useRouter();
 
 const props = defineProps({
   postId: {
     type: [Number, String],
-    required: true
+    required: true,
   }
 });
 
@@ -23,7 +23,7 @@ const post = ref({
 const loading = ref(true);
 
 onMounted(() => {
-  axios.get(`/api/posts/${props.postId}`)
+  axios.get(`/posts/${props.postId}`)
       .then((response) => {
         setInterval(() => {
           post.value = response.data.response;
@@ -37,7 +37,7 @@ const moveToEdit = () => {
 }
 
 const deletePost = () => {
-  axios.delete(`/api/posts/${props.postId}`)
+  axios.delete(`/posts/${props.postId}`)
       .then(() => {
         router.replace({name: 'home'});
         ElMessage({

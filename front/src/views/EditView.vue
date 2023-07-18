@@ -32,7 +32,7 @@ onMounted(() => {
 const edit = () => {
   console.log(post.value);
 
-  axios.patch(`/api/posts/${props.postId}`, post.value)
+  axios.patch(`/posts/${props.postId}`, post.value)
       .then(() => {
         router.replace({ name: 'read', params: {postId: props.postId} });
         ElMessage({

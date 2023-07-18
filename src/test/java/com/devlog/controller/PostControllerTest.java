@@ -45,7 +45,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("posts 요청 시 글 저장")
+    @DisplayName("글 작성 요청 시 글 저장")
     void testPosts_givenSaveRequest_shouldReturnPostId() throws Exception {
         // given
         PostCreate request = PostCreate.builder()
@@ -62,11 +62,13 @@ class PostControllerTest {
 
         // then
         result.andDo(print())
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success", is(true)))
+            .andExpect(jsonPath("$.response", is(true)));
     }
 
     @Test
-    @DisplayName("/posts 요청시 title 값은 필수이다.")
+    @DisplayName("글 작성 요청 시 title 값은 필수이다.")
     void testPosts_givenNullTitle_shouldReturnErrorResponse() throws Exception {
         // given
         PostCreate request = PostCreate.builder()
@@ -90,7 +92,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("/posts 요청시 content 값은 필수이다.")
+    @DisplayName("글 작성 요청시 content 값은 필수이다.")
     void testPosts_givenNullContent_shouldReturnErrorResponse() throws Exception {
         // given
         PostCreate request = PostCreate.builder()
@@ -114,7 +116,7 @@ class PostControllerTest {
     }
 
     @Test
-    @DisplayName("/posts 요청시 DB에 값이 저장된다.")
+    @DisplayName("글 작성 요청시 DB에 값이 저장된다.")
     void testPosts_givenSaveRequest_shouldSaveInDatabase() throws Exception {
         // given
         PostCreate request = PostCreate.builder()
@@ -131,13 +133,14 @@ class PostControllerTest {
         );
 
         // then
-        result.andDo(print())
-            .andExpect(status().isOk());
-
-        assertEquals(1L, postRepository.count());
         Post post = postRepository.findAll().get(0);
         assertEquals(request.getTitle(), post.getTitle());
         assertEquals(request.getContent(), post.getContent());
+
+        result.andDo(print())
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success", is(true)))
+            .andExpect(jsonPath("$.response", is(true)));
     }
 
     @Test
@@ -342,7 +345,9 @@ class PostControllerTest {
 
         // then
         result.andDo(print())
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success", is(true)))
+            .andExpect(jsonPath("$.response", is(true)));
     }
 
     @Test
@@ -363,7 +368,9 @@ class PostControllerTest {
 
         // then
         result.andDo(print())
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success", is(true)))
+            .andExpect(jsonPath("$.response", is(true)));
     }
 
     @Test
@@ -382,7 +389,9 @@ class PostControllerTest {
         // then
         result.andDo(print())
             .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.code", is("404")));
+            .andExpect(jsonPath("$.success", is(false)))
+            .andExpect(jsonPath("$.error").exists())
+            .andExpect(jsonPath("$.error.status", is(404)));
     }
 
     @Test
@@ -407,6 +416,8 @@ class PostControllerTest {
         // then
         result.andDo(print())
             .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.code", is("404")));
+            .andExpect(jsonPath("$.success", is(false)))
+            .andExpect(jsonPath("$.error").exists())
+            .andExpect(jsonPath("$.error.status", is(404)));
     }
 }

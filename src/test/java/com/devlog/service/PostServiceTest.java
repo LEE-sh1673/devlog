@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.devlog.config.CustomSpringBootTest;
 import com.devlog.domain.Post;
-import com.devlog.errors.v1.NotFoundException;
+import com.devlog.errors.v2.NotFoundException;
 import com.devlog.repository.PostRepository;
 import com.devlog.request.PostCreate;
 import com.devlog.request.PostEdit;

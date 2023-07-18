@@ -32,8 +32,9 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public void post(@RequestBody @Valid final PostCreate postCreate) {
+    public ApiUtils.ApiResult<Boolean> post(@RequestBody @Valid final PostCreate postCreate) {
         postService.save(postCreate);
+        return success(true);
     }
 
     @GetMapping("/posts/{postId}")
@@ -47,13 +48,15 @@ public class PostController {
     }
 
     @PatchMapping("/posts/{postId}")
-    public void edit(@PathVariable final Long postId,
+    public ApiUtils.ApiResult<Boolean> edit(@PathVariable final Long postId,
         @RequestBody @Valid final PostEdit postEdit) {
         postService.edit(postId, postEdit);
+        return success(true);
     }
 
     @DeleteMapping("/posts/{postId}")
-    public void delete(@PathVariable final Long postId) {
+    public ApiUtils.ApiResult<Boolean> delete(@PathVariable final Long postId) {
         postService.delete(postId);
+        return success(true);
     }
 }

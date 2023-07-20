@@ -1,0 +1,14 @@
+### 로그인
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "lsh901673@gmail.com",
+  "password": "1234"
+}
+
+### 인증 페이지 요청
+GET http://localhost:8080/foo
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.9asPb5hQBY_1-OEsvtUypYEMM8LN8ZcnqsP97WCm6Qc
+#Cookie: SESSION=8505e746-403c-4a16-ac09-7ea1f8e7225e

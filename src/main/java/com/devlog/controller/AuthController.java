@@ -8,7 +8,6 @@ import java.time.Duration;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -26,19 +25,14 @@ public class AuthController {
 
     @GetMapping("/foo")
     public Long foo(final UserSession userSession) {
-        log.info(">> id: {}", userSession.getId());
         return userSession.getId();
     }
 
     @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody @Valid final LoginRequest request) {
-        ResponseCookie cookie
-            = getCookieFromResponse(authService.login(request));
-
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .header(HttpHeaders.SET_COOKIE, cookie.toString())
-            .build();
+            .body(authService.login(request));
     }
 
     private ResponseCookie getCookieFromResponse(final SessionResponse response) {

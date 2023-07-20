@@ -1,17 +1,13 @@
 package com.devlog.request;
 
-import static lombok.AccessLevel.*;
-import static org.apache.commons.lang3.builder.ToStringStyle.*;
+import static lombok.AccessLevel.PROTECTED;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import javax.validation.constraints.NotBlank;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
-import com.devlog.domain.Post;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
@@ -27,13 +23,6 @@ public class PostCreate {
     public PostCreate(final String title, final String content) {
         this.title = title;
         this.content = content;
-    }
-
-    public Post toEntity() {
-        return Post.builder()
-            .title(title)
-            .content(content)
-            .build();
     }
 
     @Override

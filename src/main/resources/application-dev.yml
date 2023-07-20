@@ -24,6 +24,6 @@ spring:
 
   datasource:
     driver-class-name: org.h2.Driver
-    url: "jdbc:h2:mem:devlog;MODE=MySQL"
+    url: "jdbc:h2:mem:devlog;MODE=MySQL;NON_KEYWORDS=USER"
     username: sa
     password:

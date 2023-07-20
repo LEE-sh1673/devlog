@@ -33,6 +33,11 @@ public class GeneralExceptionHandler {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(response);
+
+//        return newResponse(
+//            e.getBindingResult().getAllErrors().get(0).getDefaultMessage(),
+//            HttpStatus.BAD_REQUEST
+//        );
     }
 
     @ExceptionHandler(DevlogException.class)

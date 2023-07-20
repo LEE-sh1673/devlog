@@ -12,6 +12,8 @@ import com.devlog.response.PostResponse;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +24,11 @@ public class PostService {
 
     private final PostRepository postRepository;
 
+    private final ModelMapper modelMapper;
+
     @Transactional
     public void save(final PostCreate postCreate) {
-        postRepository.save(postCreate.toEntity());
+        postRepository.save(modelMapper.map(postCreate, Post.class));
     }
 
     @Transactional(readOnly = true)
@@ -35,7 +39,8 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PageResponse findAll(final PostSearch postSearch) {
-        return new PageResponse(postRepository.findAll(postSearch));
+        Page<PostResponse> pages = postRepository.findAll(postSearch);
+        return modelMapper.map(pages, PageResponse.class);
     }
 
     @Transactional

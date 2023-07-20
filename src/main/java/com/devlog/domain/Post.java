@@ -10,6 +10,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Getter
 @Entity
@@ -40,5 +42,13 @@ public class Post {
     public void edit(final PostEditor postEditor) {
         this.title = postEditor.getTitle();
         this.content = postEditor.getContent();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+            .append("title", title)
+            .append("content", content)
+            .build();
     }
 }

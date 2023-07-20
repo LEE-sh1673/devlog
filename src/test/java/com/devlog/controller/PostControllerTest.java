@@ -133,6 +133,7 @@ class PostControllerTest {
         );
 
         // then
+        assertEquals(1L, postRepository.count());
         Post post = postRepository.findAll().get(0);
         assertEquals(request.getTitle(), post.getTitle());
         assertEquals(request.getContent(), post.getContent());
@@ -218,14 +219,14 @@ class PostControllerTest {
         result.andDo(print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.success", is(true)))
-            .andExpect(jsonPath("$.response.posts").isArray())
-            .andExpect(jsonPath("$.response.posts.length()", is(2)))
-            .andExpect(jsonPath("$.response.posts[0].id").value(posts.get(1).getId()))
-            .andExpect(jsonPath("$.response.posts[0].title", is(posts.get(1).getTitle())))
-            .andExpect(jsonPath("$.response.posts[0].content", is(posts.get(1).getContent())))
-            .andExpect(jsonPath("$.response.posts[1].id").value(posts.get(0).getId()))
-            .andExpect(jsonPath("$.response.posts[1].title", is(posts.get(0).getTitle())))
-            .andExpect(jsonPath("$.response.posts[1].content", is(posts.get(0).getContent())));
+            .andExpect(jsonPath("$.response.content").isArray())
+            .andExpect(jsonPath("$.response.content.length()", is(2)))
+            .andExpect(jsonPath("$.response.content[0].id").value(posts.get(1).getId()))
+            .andExpect(jsonPath("$.response.content[0].title", is(posts.get(1).getTitle())))
+            .andExpect(jsonPath("$.response.content[0].content", is(posts.get(1).getContent())))
+            .andExpect(jsonPath("$.response.content[1].id").value(posts.get(0).getId()))
+            .andExpect(jsonPath("$.response.content[1].title", is(posts.get(0).getTitle())))
+            .andExpect(jsonPath("$.response.content[1].content", is(posts.get(0).getContent())));
     }
 
     @Test
@@ -253,11 +254,11 @@ class PostControllerTest {
         // then
         result.andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.response.posts").isArray())
-            .andExpect(jsonPath("$.response.posts.length()", is(10)))
-            .andExpect(jsonPath("$.response.posts[0].id").value(posts.get(29).getId()))
-            .andExpect(jsonPath("$.response.posts[0].title", is("제목 30")))
-            .andExpect(jsonPath("$.response.posts[0].content", is("본문 30")));
+            .andExpect(jsonPath("$.response.content").isArray())
+            .andExpect(jsonPath("$.response.content.length()", is(10)))
+            .andExpect(jsonPath("$.response.content[0].id").value(posts.get(29).getId()))
+            .andExpect(jsonPath("$.response.content[0].title", is("제목 30")))
+            .andExpect(jsonPath("$.response.content[0].content", is("본문 30")));
     }
 
     @Test
@@ -285,11 +286,11 @@ class PostControllerTest {
         // then
         result.andDo(print())
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.response.posts").isArray())
-            .andExpect(jsonPath("$.response.posts.length()", is(10)))
-            .andExpect(jsonPath("$.response.posts[0].id").value(posts.get(29).getId()))
-            .andExpect(jsonPath("$.response.posts[0].title", is("제목 30")))
-            .andExpect(jsonPath("$.response.posts[0].content", is("본문 30")));
+            .andExpect(jsonPath("$.response.content").isArray())
+            .andExpect(jsonPath("$.response.content.length()", is(10)))
+            .andExpect(jsonPath("$.response.content[0].id").value(posts.get(29).getId()))
+            .andExpect(jsonPath("$.response.content[0].title", is("제목 30")))
+            .andExpect(jsonPath("$.response.content[0].content", is("본문 30")));
     }
 
     @Test

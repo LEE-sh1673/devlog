@@ -1,17 +1,9 @@
 package com.devlog.service;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import javax.transaction.Transactional;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.devlog.config.CustomSpringBootTest;
 import com.devlog.domain.Post;
@@ -22,6 +14,13 @@ import com.devlog.request.PostEdit;
 import com.devlog.request.PostSearch;
 import com.devlog.response.PageResponse;
 import com.devlog.response.PostResponse;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import javax.transaction.Transactional;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Transactional
 @CustomSpringBootTest
@@ -103,11 +102,11 @@ class PostServiceTest {
         );
 
         // then
-        assertEquals(0, postResponses.getPageNo());
+        assertEquals(0, postResponses.getNumber());
         assertEquals(2, postResponses.getTotalPages());
-        assertEquals(10L, postResponses.getPageSize());
+        assertEquals(10L, postResponses.getSize());
         assertEquals(20L, postResponses.getTotalElements());
-        assertEquals("제목 20", postResponses.getPosts().get(0).getTitle());
+        assertEquals("제목 20", postResponses.getContent().get(0).getTitle());
         assertFalse(postResponses.isLast());
     }
 

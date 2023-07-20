@@ -8,3 +8,6 @@ INSERT INTO post (title, content) VALUES ('글 제목 7', '글 본문 7');
 INSERT INTO post (title, content) VALUES ('글 제목 8', '글 본문 8');
 INSERT INTO post (title, content) VALUES ('글 제목 9', '글 본문 9');
 INSERT INTO post (title, content) VALUES ('글 제목 10', '글 본문 10');
+
+INSERT INTO user (name, email, password, created_at)
+VALUES('이승훈', 'lsh901673@gmail.com', '1234', '2023-07-18 17:41:00');

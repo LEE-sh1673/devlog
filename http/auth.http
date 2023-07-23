@@ -10,5 +10,8 @@ Content-Type: application/json
 ### 인증 페이지 요청
 GET http://localhost:8080/foo
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.9asPb5hQBY_1-OEsvtUypYEMM8LN8ZcnqsP97WCm6Qc
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjkwMDI2ODY1fQ.Fqk5P1ppRVqnpYGIbmUY1dRfDkS2VNj1a84xOis8vKM
 #Cookie: SESSION=8505e746-403c-4a16-ac09-7ea1f8e7225e
+
+### /sound 테스트
+GET http://localhost:8080/sound?type=CAT

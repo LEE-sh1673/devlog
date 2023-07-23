@@ -4,6 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.JsonFieldType.OBJECT;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -19,6 +20,7 @@ import com.devlog.domain.Post;
 import com.devlog.repository.PostRepository;
 import com.devlog.request.PostCreate;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,6 +68,8 @@ public class PostControllerDocTest {
         result.andDo(print())
             .andExpect(status().isOk())
             .andDo(document("post-inquiry",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
                 pathParameters(
                     parameterWithName("postId").description("게시글 ID")
                 ),
@@ -98,6 +102,8 @@ public class PostControllerDocTest {
         result.andDo(print())
             .andExpect(status().isNotFound())
             .andDo(document("post-inquiry-error",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
                 pathParameters(
                     parameterWithName("postId").description("게시글 ID")
                 ),
@@ -133,11 +139,14 @@ public class PostControllerDocTest {
         // then
         result.andDo(print())
             .andExpect(status().isOk())
-            .andDo(document("post-create", requestFields(
-                fieldWithPath("title")
-                    .description("The post's title")
-                    .attributes(key("constraint").value("좋은 제목 작성")),
-                fieldWithPath("content").description("The post's content").optional()
-            )));
+            .andDo(document("post-create",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                    fieldWithPath("title")
+                        .description("The post's title")
+                        .attributes(key("constraint").value("좋은 제목 작성")),
+                    fieldWithPath("content").description("The post's content").optional()
+                )));
     }
 }

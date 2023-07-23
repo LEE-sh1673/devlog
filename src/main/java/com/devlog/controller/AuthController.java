@@ -2,14 +2,13 @@ package com.devlog.controller;
 
 import com.devlog.config.data.UserSession;
 import com.devlog.request.LoginRequest;
-import com.devlog.response.SessionResponse;
+import com.devlog.request.SignUpRequest;
 import com.devlog.service.AuthService;
-import java.time.Duration;
+
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,18 +31,12 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody @Valid final LoginRequest request) {
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(authService.login(request));
+            .body(authService.login(request.getEmail(), request.getPassword()));
     }
 
-    private ResponseCookie getCookieFromResponse(final SessionResponse response) {
-        return ResponseCookie
-            .from("SESSION", response.getAccessToken())
-            .domain("localhost") //TODO: 서버 환경에 따른 변경 필요
-            .path("/")
-            .httpOnly(true)
-            .secure(false)
-            .maxAge(Duration.ofDays(30))
-            .sameSite("Strict")
-            .build();
+    @PostMapping("/auth/signup")
+    public ResponseEntity<Void> signup(@RequestBody @Valid final SignUpRequest request) {
+        authService.signup(request.toServiceDto());
+        return ResponseEntity.ok().build();
     }
 }

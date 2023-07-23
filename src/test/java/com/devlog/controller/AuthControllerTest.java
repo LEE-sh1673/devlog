@@ -1,23 +1,11 @@
 package com.devlog.controller;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.http.MediaType.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.devlog.config.CustomSpringBootTest;
-import com.devlog.domain.Session;
-import com.devlog.domain.User;
-import com.devlog.repository.SessionRepository;
-import com.devlog.repository.UserRepository;
-import com.devlog.request.LoginRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,6 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import com.devlog.config.CustomSpringBootTest;
+import com.devlog.domain.User;
+import com.devlog.repository.SessionRepository;
+import com.devlog.repository.UserRepository;
+import com.devlog.request.LoginRequest;
+import com.devlog.request.SignUpRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @AutoConfigureMockMvc
 @CustomSpringBootTest
@@ -75,7 +71,8 @@ class AuthControllerTest {
 
         // then
         result.andDo(print())
-            .andExpect(status().isCreated());
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.accessToken").exists());
     }
 
     @Test
@@ -104,14 +101,9 @@ class AuthControllerTest {
         );
 
         // then
-        assertEquals(1L, sessionRepository.count());
-
-        Session session = sessionRepository.findAll().get(0);
-
         result.andDo(print())
             .andExpect(status().isCreated())
-            .andExpect(cookie().exists("SESSION"))
-            .andExpect(cookie().value("SESSION", session.getAccessToken()));
+            .andExpect(jsonPath("$.accessToken").exists());
     }
 
     @Test
@@ -139,32 +131,6 @@ class AuthControllerTest {
     }
 
     @Test
-    @DisplayName("로그인 후 권한이 필요한 페이지에 접속한다 /foo")
-    void test4() throws Exception {
-        // given
-        User user = User.builder()
-            .name("이승훈")
-            .email("lsh901673@gmail.com")
-            .password("1234")
-            .build();
-
-        Session session = user.addSession();
-        userRepository.save(user);
-
-        // when
-        ResultActions result = mockMvc.perform(
-            get("/foo")
-                .cookie(new Cookie("SESSION", session.getAccessToken()))
-                .contentType(APPLICATION_JSON)
-                .accept(APPLICATION_JSON)
-        );
-
-        // then
-        result.andDo(print())
-            .andExpect(status().isOk());
-    }
-
-    @Test
     @DisplayName("로그인 후 검증되지 않은 세션값으로 권한이 필요한 페이지에 접속할 수 없다.")
     void test5() throws Exception {
         // given
@@ -174,13 +140,11 @@ class AuthControllerTest {
             .password("1234")
             .build();
 
-        Session session = user.addSession();
         userRepository.save(user);
 
         // when
         ResultActions result = mockMvc.perform(
             get("/foo")
-                .cookie(new Cookie("SESSION", session.getAccessToken() + "LL"))
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
         );
@@ -188,5 +152,25 @@ class AuthControllerTest {
         // then
         result.andDo(print())
             .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("회원가입")
+    void test6() throws Exception {
+        // given
+        SignUpRequest signUpRequest
+            = new SignUpRequest("lsh901673@gmail.com", "1234", "이승훈");
+
+        // when
+        ResultActions result = mockMvc.perform(
+            post("/auth/signup")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(signUpRequest))
+        );
+
+        // then
+        result.andDo(print())
+            .andExpect(status().isOk());
     }
 }

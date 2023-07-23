@@ -10,7 +10,7 @@ import com.querydsl.core.types.Path;
 
 
 /**
- * QPost is a Querydsl query type for TestPost
+ * QPost is a Querydsl query type for Post
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QPost extends EntityPathBase<Post> {

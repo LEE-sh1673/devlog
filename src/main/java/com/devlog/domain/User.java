@@ -42,6 +42,10 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
+    public void updatePassword(final String password) {
+        this.password = password;
+    }
+
     public Session addSession() {
         Session session = Session.builder()
             .user(this)

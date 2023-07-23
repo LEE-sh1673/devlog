@@ -1,29 +1,29 @@
 package com.devlog.config;
 
-import com.devlog.config.data.UserSession;
-import com.devlog.errors.v2.UnauthorizedException;
-import com.devlog.repository.SessionRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import com.devlog.config.data.UserSession;
+import com.devlog.errors.v2.UnauthorizedException;
+import com.devlog.repository.SessionRepository;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @RequiredArgsConstructor
 public class AuthResolver implements HandlerMethodArgumentResolver {
 
-    private static final String JWS_SECRET_KEY = "UktjAbZfec6goTwhuYV6cppdp7cQ0/tQpvL3B22hIYs=";
-
     private final SessionRepository sessionRepository;
+
+    private final AppConfig appConfig;
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
@@ -36,11 +36,12 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
         final NativeWebRequest webRequest,
         final WebDataBinderFactory binderFactory) throws Exception {
 
+        log.info(">>> appConfig: {}", appConfig);
         final String jws = getJWSToken(webRequest);
 
         try {
             Jws<Claims> claimsJws = Jwts.parserBuilder()
-                .setSigningKey(JWS_SECRET_KEY)
+                .setSigningKey(appConfig.getJwtKey())
                 .build()
                 .parseClaimsJws(jws);
 
@@ -62,20 +63,5 @@ public class AuthResolver implements HandlerMethodArgumentResolver {
             throw new UnauthorizedException();
         }
         return jws;
-    }
-
-    private static Cookie[] getCookies(final NativeWebRequest webRequest) {
-        final HttpServletRequest request
-            = webRequest.getNativeRequest(HttpServletRequest.class);
-
-        if (!hasCookies(request)) {
-            log.error(">>> Invalid request (request is null or no cookie exists.)");
-            throw new UnauthorizedException();
-        }
-        return request.getCookies();
-    }
-
-    private static boolean hasCookies(final HttpServletRequest request) {
-        return request != null && request.getCookies() != null;
     }
 }

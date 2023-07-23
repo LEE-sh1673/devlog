@@ -4,6 +4,7 @@ buildscript {
         asciidoctorVersion = '3.3.2'
         springRestDocsVersion = '2.0.6.RELEASE'
         jjwtVersion = '0.11.1'
+        bcprovVersion = '1.70'
         snippetsDir = file('build/generated-snippets')
         restDocsDir = file('src/main/resources/static/docs')
     }
@@ -35,6 +36,15 @@ repositories {
 }
 
 dependencies {
+
+    //=== spring security::crypto
+    implementation 'org.springframework.security:spring-security-crypto'
+    implementation "org.bouncycastle:bcprov-jdk15on:$bcprovVersion"
+    //===
+
+    //=== configuration processor
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    //===
 
     //=== jwt
     implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"

@@ -1,8 +1,10 @@
 buildscript {
     ext {
+        springBootVersion = '3.1.2'
         commonsLang3Version = '3.12.0'
         asciidoctorVersion = '3.3.2'
-        springRestDocsVersion = '2.0.6.RELEASE'
+        springRestDocsVersion = '3.0.0'
+        queryDslVersion = '5.0.0'
         jjwtVersion = '0.11.1'
         bcprovVersion = '1.70'
         snippetsDir = file('build/generated-snippets')
@@ -12,7 +14,7 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.7.13'
+    id 'org.springframework.boot' version "$springBootVersion"
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'org.asciidoctor.jvm.convert' version "$asciidoctorVersion"
 }
@@ -28,7 +30,7 @@ group = 'com.devlog'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '11'
+    sourceCompatibility = '17'
 }
 
 repositories {
@@ -36,6 +38,11 @@ repositories {
 }
 
 dependencies {
+
+    //=== spring security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.security:spring-security-test'
+    //===
 
     //=== spring security::crypto
     implementation 'org.springframework.security:spring-security-crypto'
@@ -66,10 +73,10 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     //=== query dsl
-    implementation 'com.querydsl:querydsl-core'
-    implementation 'com.querydsl:querydsl-jpa'
+    implementation "com.querydsl:querydsl-core:$queryDslVersion"
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
 
-    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     //===

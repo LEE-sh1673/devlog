@@ -1,9 +1,8 @@
 package com.devlog.request;
 
-import javax.validation.constraints.NotBlank;
-
 import com.devlog.service.dto.SignUpRequestDto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -2,8 +2,7 @@ package com.devlog.request;
 
 import static lombok.AccessLevel.*;
 
-import javax.validation.constraints.NotBlank;
-
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

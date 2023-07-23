@@ -1,13 +1,14 @@
 package com.devlog.request;
 
-import static lombok.AccessLevel.PROTECTED;
-import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+import static lombok.AccessLevel.*;
+import static org.apache.commons.lang3.builder.ToStringStyle.*;
 
-import javax.validation.constraints.NotBlank;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)

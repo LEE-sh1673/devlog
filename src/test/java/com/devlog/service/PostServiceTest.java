@@ -1,9 +1,15 @@
 package com.devlog.service;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.devlog.config.CustomSpringBootTest;
 import com.devlog.domain.Post;
@@ -14,13 +20,8 @@ import com.devlog.request.PostEdit;
 import com.devlog.request.PostSearch;
 import com.devlog.response.PageResponse;
 import com.devlog.response.PostResponse;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import javax.transaction.Transactional;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import jakarta.transaction.Transactional;
 
 @Transactional
 @CustomSpringBootTest

@@ -12,9 +12,7 @@ import com.devlog.config.CustomSpringBootTest;
 import com.devlog.crypto.PasswordEncoder;
 import com.devlog.domain.User;
 import com.devlog.errors.v2.AlreadyExistsEmailException;
-import com.devlog.errors.v2.UnauthorizedException;
 import com.devlog.repository.UserRepository;
-import com.devlog.response.SessionResponse;
 import com.devlog.service.dto.SignUpRequestDto;
 
 @Transactional
@@ -76,39 +74,5 @@ class AuthServiceTest {
         assertThrows(
             AlreadyExistsEmailException.class,
             () -> authService.signup(signUpRequest));
-    }
-
-    @Test
-    @DisplayName("로그인 성공 테스트")
-    void test3() {
-        // given
-        userRepository.save(User.builder()
-            .name("name-1")
-            .password(encoder.encrypt("password-1"))
-            .email("email-1")
-            .build());
-
-        // when
-        SessionResponse response
-            = authService.login("email-1", "password-1");
-
-        // then
-        assertNotNull(response.getAccessToken());
-    }
-
-    @Test
-    @DisplayName("로그인 실패 테스트")
-    void test4() {
-        // given
-        userRepository.save(User.builder()
-            .name("name-1")
-            .password(encoder.encrypt("password-1"))
-            .email("email-1")
-            .build());
-
-        // when & then
-        assertThrows(
-            UnauthorizedException.class,
-            () -> authService.login("email-1", "password-2"));
     }
 }

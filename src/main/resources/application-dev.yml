@@ -29,4 +29,4 @@ spring:
     password:
 
 lsh:
-  jwt-key: "UktjAbZfec6goTwhuYV6cppdp7cQ0/tQpvL3B22hIYs="
+  jwt-key: ${devlog_jwt_key}

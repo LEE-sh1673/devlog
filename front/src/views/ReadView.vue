@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
-import { onMounted, ref } from "vue";
+import {onMounted, ref} from "vue";
 import axios from "axios";
 import {useRouter} from "vue-router";
-import { ElMessage, ElMessageBox } from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const router = useRouter();
 
@@ -14,7 +14,7 @@ const props = defineProps({
   }
 });
 
-const testPost = ref({
+const post = ref({
   id: 0,
   title: "",
   content: ""
@@ -26,7 +26,7 @@ onMounted(() => {
   axios.get(`/posts/${props.postId}`)
       .then((response) => {
         setInterval(() => {
-          testPost.value = response.data.response;
+          post.value = response.data.response;
           loading.value = false;
         }, 200);
       }).catch((error) => console.log(error));
@@ -66,7 +66,7 @@ const openDeleteConfirmBox = () => {
   <el-space direction="vertical">
     <el-skeleton :loading="loading" animated>
       <template #template>
-        <div class="testPost">
+        <div class="post">
           <el-row>
             <el-col>
               <el-skeleton-item variant="h1" class="title" style="width: 80%; height: 60px"/>
@@ -99,10 +99,10 @@ const openDeleteConfirmBox = () => {
       </template>
 
       <template #default>
-        <div class="testPost">
+        <div class="post">
           <el-row>
             <el-col>
-              <h2 class="title">{{ testPost.title }}</h2>
+              <h2 class="title">{{ post.title }}</h2>
 
               <div class="sub d-flex gap-2 align-items-center">
                 <div class="category">개발</div>
@@ -114,7 +114,7 @@ const openDeleteConfirmBox = () => {
 
           <el-row class="post__content">
             <el-col>
-              <div class="content">{{ testPost.content }}</div>
+              <div class="content">{{ post.content }}</div>
             </el-col>
           </el-row>
 
@@ -135,7 +135,7 @@ const openDeleteConfirmBox = () => {
 </template>
 
 <style scoped lang="scss">
-.testPost {
+.post {
 
   max-width: 900px;
 

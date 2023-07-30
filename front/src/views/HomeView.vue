@@ -6,7 +6,7 @@ import {onMounted, ref} from "vue";
 const pageNumber = ref(0);
 const pageSize = ref(4);
 const totalElements = ref(0);
-const testPosts: any = ref([]);
+const posts: any = ref([]);
 
 onMounted(() => {
   fetchPosts(pageNumber.value, pageSize.value);
@@ -14,13 +14,13 @@ onMounted(() => {
 
 const fetchPosts = (page: number, size: number) => {
   axios
-      .get("/testPosts", {params: {page: page, size: size}})
+      .get("/posts", {params: {page: page, size: size}})
       .then((response) => initPages(response.data.response))
       .catch((error) => console.log(error));
 }
 
 const initPages = (res : any) => {
-  testPosts.value = res.content;
+  posts.value = res.content;
   pageNumber.value = res.number;
   pageSize.value = res.size;
   totalElements.value = res.totalElements;
@@ -34,16 +34,16 @@ const changePage = (page: number) => {
 
 <template>
   <p class="nums__post">전체 글 <span>{{ totalElements }}</span> 개</p>
-  <ul class="testPosts">
-    <li v-for="testPost in testPosts" :key="testPost!.id">
+  <ul class="posts">
+    <li v-for="post in posts" :key="post.id">
       <div class="title">
-        <router-link :to="{ name: 'read', params: {postId: testPost!.id} }">
-          {{ testPost!.title }}
+        <router-link :to="{ name: 'read', params: {postId: post.id} }">
+          {{ post.title }}
         </router-link>
       </div>
 
       <div class="content">
-        {{ testPost!.content }}
+        {{ post.content }}
       </div>
 
       <div class="sub d-flex gap-2 align-items-center">
@@ -73,7 +73,7 @@ const changePage = (page: number) => {
   }
 }
 
-ul.testPosts {
+ul.posts {
   list-style: none;
   padding: 0;
 

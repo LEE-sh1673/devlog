@@ -1,0 +1,7 @@
+### /events 테스트
+GET http://localhost:8080/events
+Content-Type: application/json
+
+{
+  "tags": ["food", "coding", "delivery"]
+}

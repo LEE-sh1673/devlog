@@ -51,6 +51,7 @@ public class SecurityConfig {
             .authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                     .requestMatchers(mvcMatcherBuilder.pattern("/auth/login")).permitAll()
+                    .requestMatchers(mvcMatcherBuilder.pattern("/events")).permitAll()
                     .anyRequest().authenticated()
             )
             .formLogin((formLogin) ->

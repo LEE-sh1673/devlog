@@ -1,10 +1,10 @@
 package com.devlog.service;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.devlog.crypto.PasswordEncoder;
 import com.devlog.domain.User;
 import com.devlog.errors.v2.AlreadyExistsEmailException;
 import com.devlog.repository.UserRepository;
@@ -43,6 +43,6 @@ public class AuthService {
     }
 
     private String encryptPassword(final String password) {
-        return encoder.encrypt(password);
+        return encoder.encode(password);
     }
 }

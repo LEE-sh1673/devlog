@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-@Profile("!test")
+@Profile("tmp")
 @Component
 public class ScryptPasswordEncoder implements PasswordEncoder {
 

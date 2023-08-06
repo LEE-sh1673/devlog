@@ -2,29 +2,40 @@ package com.devlog.config;
 
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.*;
 
+import java.time.Duration;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 
-import lombok.RequiredArgsConstructor;
+import com.devlog.config.handler.Http401Handler;
+import com.devlog.config.handler.Http403Handler;
+import com.devlog.config.handler.LoginFailHandler;
+import com.devlog.domain.User;
+import com.devlog.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final MvcRequestMatcher.Builder mvcMatcherBuilder;
+
+    private final ObjectMapper objectMapper;
 
     //TODO: Security 설정 관련 변경점 (https://spring.io/security/cve-2023-34035)
     // Spring security와 Spring MVC에서 사용할 때
@@ -51,7 +62,10 @@ public class SecurityConfig {
             .authorizeHttpRequests((authorizeHttpRequests) ->
                 authorizeHttpRequests
                     .requestMatchers(mvcMatcherBuilder.pattern("/auth/login")).permitAll()
+                    .requestMatchers(mvcMatcherBuilder.pattern("/auth/signup")).permitAll()
                     .requestMatchers(mvcMatcherBuilder.pattern("/events")).permitAll()
+                    .requestMatchers(mvcMatcherBuilder.pattern("/user")).hasRole("USER")
+                    .requestMatchers(mvcMatcherBuilder.pattern("/admin")).hasRole("ADMIN")
                     .anyRequest().authenticated()
             )
             .formLogin((formLogin) ->
@@ -61,23 +75,36 @@ public class SecurityConfig {
                     .loginPage("/auth/login")
                     .loginProcessingUrl("/auth/login")
                     .defaultSuccessUrl("/")
-            )
-            .userDetailsService(userDetailsService());
+                    .failureHandler(new LoginFailHandler(objectMapper))
+            ).rememberMe(rmConfigurer ->
+                rmConfigurer
+                    .rememberMeParameter("remember")
+                    .alwaysRemember(false)
+                    .tokenValiditySeconds((int)Duration.ofDays(30).getSeconds())
+            ).exceptionHandling(exceptionHandling ->
+                exceptionHandling
+                    .accessDeniedHandler(new Http403Handler(objectMapper))
+                    .authenticationEntryPoint(new Http401Handler(objectMapper))
+            );
         return http.build();
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.builder()
-            .username("lsh")
-            .password("1234")
-            .roles("ADMIN")
-            .build();
-        return new InMemoryUserDetailsManager(user);
+    public UserDetailsService userDetailsService(final UserRepository userRepository) {
+        return username -> {
+            User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException(username + " 을 찾을 수 없습니다."));
+            return new UserPrincipal(user);
+        };
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+        return new SCryptPasswordEncoder(
+            16,
+            8,
+            1,
+            32,
+            64);
     }
 }

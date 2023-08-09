@@ -56,7 +56,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
         return tags != null && !tags.isEmpty();
     }
 
-    private OrderSpecifier<?>[] getOrderSpecifiers(Sort sort) {
+    private OrderSpecifier<?>[] getOrderSpecifiers(final Sort sort) {
         return sort.stream()
             .map(this::getOrderSpecifierBy)
             .toArray(OrderSpecifier[]::new);

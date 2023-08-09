@@ -1,26 +1,21 @@
 package com.devlog.response;
 
-import com.devlog.domain.Post;
-
-import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostResponse {
 
     private static final int TRUNCATE_THRESHOLD = 50;
 
-    private final Long id;
+    private Long id;
 
-    private final String title;
+    private String title;
 
-    private final String content;
+    private String content;
 
-    public PostResponse(final Post post) {
-        this(post.getId(), post.getTitle(), post.getContent());
-    }
-
-    @Builder
     public PostResponse(final Long id, final String title, final String content) {
         this.id = id;
         this.title = truncateTitle(title);

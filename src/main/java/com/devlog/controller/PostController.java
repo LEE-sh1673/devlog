@@ -2,6 +2,9 @@ package com.devlog.controller;
 
 import static com.devlog.utils.ApiUtils.*;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -30,6 +33,7 @@ public class PostController {
 
     private final PostService postService;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/posts")
     public ApiUtils.ApiResult<?> post(@RequestBody @Valid final PostCreate postCreate) {
         postService.save(postCreate);
@@ -42,10 +46,13 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ApiUtils.ApiResult<PageResponse> findAll(@ModelAttribute final PostSearch postSearch) {
-        return success(postService.findAll(postSearch));
+    public ApiUtils.ApiResult<PageResponse> findAll(
+        @ModelAttribute final PostSearch postSearch,
+        @PageableDefault final Pageable pageable) {
+        return success(postService.findAll(postSearch, pageable));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/posts/{postId}")
     public ApiUtils.ApiResult<?> edit(@PathVariable final Long postId,
         @RequestBody @Valid final PostEdit postEdit) {
@@ -53,6 +60,7 @@ public class PostController {
         return success(true);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/posts/{postId}")
     public ApiUtils.ApiResult<?> delete(@PathVariable final Long postId) {
         postService.delete(postId);

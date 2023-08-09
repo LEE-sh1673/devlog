@@ -1,15 +1,16 @@
 package com.devlog.config.handler;
 
+import static com.devlog.utils.ApiUtils.*;
 import static jakarta.servlet.http.HttpServletResponse.*;
 import static java.nio.charset.StandardCharsets.*;
+import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.MediaType.*;
 
 import java.io.IOException;
 
-import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
-import com.devlog.response.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,24 +22,22 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class Http401Handler implements AuthenticationEntryPoint {
 
+    private static final String ERR_MESSAGE = "로그인이 필요합니다.";
+
     private final ObjectMapper objectMapper;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
         AuthenticationException authException) throws IOException {
-        log.error("[인증오류] 로그인이 필요합니다.");
-        sendResponse(response, "로그인이 필요합니다.");
+        log.error("[인증오류] {}", ERR_MESSAGE);
+        sendResponse(response, error(ERR_MESSAGE, UNAUTHORIZED));
     }
 
-    private void sendResponse(HttpServletResponse response, String message) throws IOException {
+    private void sendResponse(HttpServletResponse response, ApiResult<?> error)
+        throws IOException {
         response.setCharacterEncoding(UTF_8.displayName());
         response.setStatus(SC_UNAUTHORIZED);
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(objectMapper.writeValueAsString(
-            ErrorResponse.builder()
-                .message(message)
-                .code(String.valueOf(SC_UNAUTHORIZED))
-                .build()
-        ));
+        response.setContentType(APPLICATION_JSON_VALUE);
+        response.getWriter().write(objectMapper.writeValueAsString(error));
     }
 }

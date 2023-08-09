@@ -1,7 +1,6 @@
 package com.devlog.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,13 +20,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/auth/signup")
-    public ResponseEntity<Void> signup(@RequestBody @Valid final SignUpRequest request) {
+    public ResponseEntity<?> signup(@RequestBody @Valid final SignUpRequest request) {
         authService.signup(request.toServiceDto());
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/auth/login")
-    public String login() {
-        return "로그인 페이지입니다.";
     }
 }

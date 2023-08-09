@@ -24,19 +24,19 @@ public class PostSearch {
     private final Sort sort;
 
     @Builder
-    public PostSearch(final Integer page, final Integer size,
-        final Sort.Direction direction, final String... properties) {
-
+    public PostSearch(final Integer page, final Integer size, final Sort.Direction direction, final String[] sort) {
         this.page = Objects.requireNonNullElse(page, INITIAL_PAGE_NUMBER);
         this.size = Objects.requireNonNullElse(size, DEFAULT_PAGE_SIZE);
-        this.sort = mapSort(direction, properties);
+        this.sort = mapSort(direction, sort);
     }
 
-    private Sort mapSort(final Sort.Direction direction, final String... properties) {
-        return Sort.by(
-            direction == null ? Sort.Direction.DESC : direction,
-            properties == null ? new String[] {"id"} : properties
-        );
+    private Sort mapSort(Sort.Direction direction, String... properties) {
+        direction = Objects.requireNonNullElse(direction, Sort.Direction.DESC);
+
+        if (properties == null || properties.length == 0) {
+            return Sort.by(direction, "id");
+        }
+        return Sort.by(direction, properties);
     }
 
     public long getOffset() {
@@ -46,9 +46,5 @@ public class PostSearch {
 
     public PageRequest toPageRequest() {
         return PageRequest.of(Math.max(INITIAL_PAGE_NUMBER, page) - 1, size, sort);
-    }
-
-    public boolean isUnsorted() {
-        return sort.isUnsorted();
     }
 }

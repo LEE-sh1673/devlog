@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class AuthService {
 
@@ -25,10 +25,11 @@ public class AuthService {
 
     private final PasswordEncoder encoder;
 
+    @Transactional
     public void signup(final SignUpRequestDto requestDto) {
         validateCredentials(requestDto.getEmail());
         final User user = modelMapper.map(requestDto, User.class);
-        user.updatePassword(encryptPassword(requestDto.getPassword()));
+        user.updatePassword(encodePassword(requestDto.getPassword()));
         userRepository.save(user);
     }
 
@@ -42,7 +43,7 @@ public class AuthService {
         return userRepository.existsUserByEmail(email);
     }
 
-    private String encryptPassword(final String password) {
-        return encoder.encode(password);
+    private String encodePassword(final String rawPassword) {
+        return encoder.encode(rawPassword);
     }
 }

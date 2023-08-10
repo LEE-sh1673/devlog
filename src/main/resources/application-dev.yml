@@ -9,8 +9,7 @@ spring:
       hibernate:
         show_sql: true
         dialect: org.hibernate.dialect.MySQL57Dialect
-        use_sql_comments: true
-        default_batch_fetch_size: 10
+        default_batch_fetch_size: 1000
     hibernate:
       ddl-auto: none
 

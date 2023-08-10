@@ -1,23 +1,25 @@
 package com.devlog.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.devlog.config.CustomSpringBootTest;
-import com.devlog.crypto.PasswordEncoder;
+import com.devlog.annotation.CustomSpringBootTest;
+import com.devlog.config.AcceptanceTest;
 import com.devlog.domain.User;
 import com.devlog.errors.v2.AlreadyExistsEmailException;
 import com.devlog.repository.UserRepository;
 import com.devlog.service.dto.SignUpRequestDto;
+import java.util.List;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @CustomSpringBootTest
-class AuthServiceTest {
+class AuthServiceTest extends AcceptanceTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -27,11 +29,6 @@ class AuthServiceTest {
 
     @Autowired
     private PasswordEncoder encoder;
-
-    @AfterEach
-    void setUp() {
-        userRepository.deleteAll();
-    }
 
     @Test
     @DisplayName("회원가입 성공 테스트")
@@ -46,11 +43,18 @@ class AuthServiceTest {
         // when
         authService.signup(requestDto);
 
+        List<String> userNames = userRepository.findAll()
+            .stream()
+            .map(User::getName)
+            .toList();
+
+        System.out.println("userRepository = " + userNames);
+
         // then
         User user = userRepository.findAll().iterator().next();
         assertEquals(1L, userRepository.count());
         assertEquals("email-1", user.getEmail());
-        assertEquals("password-1", user.getPassword());
+        assertTrue(encoder.matches("password-1", user.getPassword()));
         assertEquals("name-1", user.getName());
     }
 
@@ -60,7 +64,7 @@ class AuthServiceTest {
         // given
         userRepository.save(User.builder()
             .name("name-1")
-            .password(encoder.encrypt("password-1"))
+            .password(encoder.encode("password-1"))
             .email("email-1")
             .build());
 

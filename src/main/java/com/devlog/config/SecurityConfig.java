@@ -1,7 +1,15 @@
 package com.devlog.config;
 
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.*;
-
+import com.devlog.config.filter.EmailPasswordAuthFilter;
+import com.devlog.config.handler.Http401Handler;
+import com.devlog.config.handler.Http403Handler;
+import com.devlog.config.handler.LoginFailHandler;
+import com.devlog.config.handler.LoginSuccessHandler;
+import com.devlog.domain.User;
+import com.devlog.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,18 +31,6 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
-import com.devlog.config.filter.EmailPasswordAuthFilter;
-import com.devlog.config.handler.Http401Handler;
-import com.devlog.config.handler.Http403Handler;
-import com.devlog.config.handler.LoginFailHandler;
-import com.devlog.config.handler.LoginSuccessHandler;
-import com.devlog.domain.User;
-import com.devlog.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @Configuration
 @EnableWebSecurity
@@ -52,8 +48,8 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring()
             .requestMatchers(mvcMatcherBuilder.pattern("/favicon.ico"))
-            .requestMatchers(mvcMatcherBuilder.pattern("/error"))
-            .requestMatchers(toH2Console());
+            .requestMatchers(mvcMatcherBuilder.pattern("/error"));
+            // .requestMatchers(toH2Console());
     }
 
     @Bean

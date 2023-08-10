@@ -4,7 +4,7 @@ POST http://localhost:8080/posts
 Content-Type: application/json
 
 {
-  "title": "제목 11",
+  "title": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been",
   "content": "본문 11"
 }
 

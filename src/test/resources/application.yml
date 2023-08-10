@@ -7,17 +7,16 @@ spring:
     url: "jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;NON_KEYWORDS=USER"
 
   jpa:
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL57Dialect
         format_sql: true
-    show-sql: true
 
   data:
     web:
       pageable:
         one-indexed-parameters: true  # 웹의 요청으로 1이 들어오면 자동으로 페이지 번호를 0으로 설정해줌.
         default-page-size: 5
-lsh:
-  jwt-key: "UktjAbZfec6goTwhuYV6cppdp7cQ0/tQpvL3B22hIYs="
-

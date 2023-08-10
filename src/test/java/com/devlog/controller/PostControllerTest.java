@@ -1,17 +1,27 @@
 package com.devlog.controller;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.http.MediaType.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.devlog.annotation.CustomSpringBootTest;
+import com.devlog.annotation.WithMockTestUser;
+import com.devlog.config.AcceptanceTest;
+import com.devlog.domain.Post;
+import com.devlog.repository.PostRepository;
+import com.devlog.request.PostCreate;
+import com.devlog.request.PostEdit;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +29,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.devlog.config.CustomSpringBootTest;
-import com.devlog.domain.Post;
-import com.devlog.repository.PostRepository;
-import com.devlog.request.PostCreate;
-import com.devlog.request.PostEdit;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @AutoConfigureMockMvc
 @CustomSpringBootTest
-class PostControllerTest {
+class PostControllerTest extends AcceptanceTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,12 +42,13 @@ class PostControllerTest {
     @Autowired
     private PostRepository postRepository;
 
-    @BeforeEach
-    void setUp() {
-        postRepository.deleteAll();
-    }
+//    @AfterEach
+//    void tearDown() {
+//        postRepository.deleteAll();
+//    }
 
     @Test
+    @WithMockTestUser
     @DisplayName("글 작성 요청 시 글 저장")
     void testPosts_givenSaveRequest_shouldReturnPostId() throws Exception {
         // given
@@ -68,6 +72,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockTestUser
     @DisplayName("글 작성 요청 시 title 값은 필수이다.")
     void testPosts_givenNullTitle_shouldReturnErrorResponse() throws Exception {
         // given
@@ -92,6 +97,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockTestUser
     @DisplayName("글 작성 요청시 content 값은 필수이다.")
     void testPosts_givenNullContent_shouldReturnErrorResponse() throws Exception {
         // given
@@ -116,6 +122,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockTestUser
     @DisplayName("글 작성 요청시 DB에 값이 저장된다.")
     void testPosts_givenSaveRequest_shouldSaveInDatabase() throws Exception {
         // given
@@ -294,6 +301,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockTestUser
     @DisplayName("글 수정 요청시 title 값은 필수이다.")
     void testPosts_givenNullTitleEditRequest_shouldReturnErrorResponse() throws Exception {
         // given
@@ -323,6 +331,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockTestUser
     @DisplayName("글 제목 수정")
     void testPosts_givenEditRequest_shouldEditCorrectly() throws Exception {
         // given
@@ -352,6 +361,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockTestUser
     @DisplayName("글 삭제")
     void testPosts_givenDeleteRequest_shouldDeleteCorrectly() throws Exception {
         // given
@@ -375,6 +385,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockTestUser
     @DisplayName("존재하지 않는 게시글 조회")
     void test9() throws Exception {
         // given
@@ -396,6 +407,7 @@ class PostControllerTest {
     }
 
     @Test
+    @WithMockTestUser
     @DisplayName("존재하지 않는 게시글 수정")
     void test10() throws Exception {
         // given

@@ -1,6 +1,8 @@
 package com.devlog.response;
 
+import com.devlog.domain.Post;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,10 +18,15 @@ public class PostResponse {
 
     private String content;
 
+    @Builder
     public PostResponse(final Long id, final String title, final String content) {
         this.id = id;
         this.title = truncateTitle(title);
         this.content = content;
+    }
+
+    public static PostResponse of(final Post post) {
+        return new PostResponse(post.getId(), post.getTitle(), post.getContent());
     }
 
     private String truncateTitle(final String title) {

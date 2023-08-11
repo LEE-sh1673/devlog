@@ -1,6 +1,7 @@
 package com.devlog.response;
 
 import com.devlog.domain.Post;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

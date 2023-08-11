@@ -1,24 +1,17 @@
 package com.devlog.response;
 
-import static java.util.Objects.*;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import lombok.Builder;
 import lombok.Getter;
 
+import static java.util.Objects.requireNonNullElse;
+
 /**
- * This will be like:
- * {
- *     "code": "400",
- *     "message": "잘못된 요청입니다."
- *     "validation": [
- *          { "fieldName" : "title", "errorMessage" : "값을 입력해주세요."},
- *          ...
- *     ]
- * }
- * */
+ * This will be like: { "code": "400", "message": "잘못된 요청입니다." "validation": [ { "fieldName" : "title", "errorMessage" :
+ * "값을 입력해주세요."}, ... ] }
+ */
 @Getter
 public class ErrorResponse {
 

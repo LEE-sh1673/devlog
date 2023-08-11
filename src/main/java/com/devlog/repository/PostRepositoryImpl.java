@@ -1,7 +1,12 @@
 package com.devlog.repository;
 
-import static com.devlog.domain.QPost.post;
-import static com.devlog.utils.QueryDslUtil.getSortedColumn;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import com.devlog.domain.Post;
 import com.devlog.request.PostSearch;
@@ -10,13 +15,11 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import java.util.List;
-import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.support.PageableExecutionUtils;
+
+import static com.devlog.domain.QPost.post;
+import static com.devlog.utils.QueryDslUtil.getSortedColumn;
 
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepositoryCustom {
@@ -45,7 +48,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
 
     private OrderSpecifier<?>[] getOrderSpecifiers(final Sort sort) {
         if (sort.isUnsorted()) {
-            return new OrderSpecifier[]{post.id.desc()};
+            return new OrderSpecifier[] {post.id.desc()};
         }
         return sort.stream()
             .map(this::getOrderSpecifierBy)

@@ -1,17 +1,18 @@
 package com.devlog.config;
 
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.metamodel.EntityType;
 import jakarta.transaction.Transactional;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Service;
-
 
 /**
  * 참고:

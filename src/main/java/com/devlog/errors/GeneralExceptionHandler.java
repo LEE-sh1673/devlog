@@ -1,12 +1,5 @@
 package com.devlog.errors;
 
-import static com.devlog.utils.ApiUtils.error;
-
-import com.devlog.errors.v1.DevlogException;
-import com.devlog.errors.v2.DevlogApiException;
-import com.devlog.response.ErrorResponse;
-import com.devlog.utils.ApiUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +8,15 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.devlog.errors.v1.DevlogException;
+import com.devlog.errors.v2.DevlogApiException;
+import com.devlog.response.ErrorResponse;
+import com.devlog.utils.ApiUtils;
+
+import lombok.extern.slf4j.Slf4j;
+
+import static com.devlog.utils.ApiUtils.error;
 
 @Slf4j
 @RestControllerAdvice
@@ -34,10 +36,10 @@ public class GeneralExceptionHandler {
             .status(HttpStatus.BAD_REQUEST)
             .body(response);
 
-//        return newResponse(
-//            e.getBindingResult().getAllErrors().get(0).getDefaultMessage(),
-//            HttpStatus.BAD_REQUEST
-//        );
+        //        return newResponse(
+        //            e.getBindingResult().getAllErrors().get(0).getDefaultMessage(),
+        //            HttpStatus.BAD_REQUEST
+        //        );
     }
 
     @ExceptionHandler(DevlogException.class)

@@ -1,13 +1,16 @@
 package com.devlog.config;
 
+import java.io.Serializable;
+
+import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.core.Authentication;
+
 import com.devlog.domain.Post;
 import com.devlog.errors.v2.UserNotFoundException;
 import com.devlog.repository.PostRepository;
-import java.io.Serializable;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.PermissionEvaluator;
-import org.springframework.security.core.Authentication;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -16,7 +19,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     private final PostRepository postRepository;
 
     @Override
-    public boolean hasPermission(final Authentication authentication, final Object targetDomainObject,
+    public boolean hasPermission(final Authentication authentication,
+        final Object targetDomainObject,
         final Object permission) {
         return false;
     }
@@ -26,9 +30,9 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         final String targetType,
         final Object permission) {
 
-        final UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        final UserPrincipal principal = (UserPrincipal)authentication.getPrincipal();
 
-        final Post post = postRepository.findById((Long) targetId)
+        final Post post = postRepository.findById((Long)targetId)
             .orElseThrow(UserNotFoundException::new);
 
         if (!post.matchUserId(principal.getUserId())) {

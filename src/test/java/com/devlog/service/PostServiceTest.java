@@ -1,9 +1,14 @@
 package com.devlog.service;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 
 import com.devlog.annotation.CustomSpringBootTest;
 import com.devlog.config.AcceptanceTest;
@@ -17,15 +22,13 @@ import com.devlog.request.PostEdit;
 import com.devlog.request.PostSearch;
 import com.devlog.response.PageResponse;
 import com.devlog.response.PostResponse;
+
 import jakarta.transaction.Transactional;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @Transactional
 @CustomSpringBootTest
@@ -93,7 +96,7 @@ class PostServiceTest extends AcceptanceTest {
             참고::테스트 격리 관련
             - https://tecoble.techcourse.co.kr/post/2020-09-15-test-isolation/
          */
-//        postRepository.deleteAll();
+        //        postRepository.deleteAll();
     }
 
     @Test

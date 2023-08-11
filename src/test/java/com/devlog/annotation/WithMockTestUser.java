@@ -1,12 +1,14 @@
 package com.devlog.annotation;
 
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.test.context.support.WithSecurityContext;
 
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 @Profile("test")
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RUNTIME)
 @WithSecurityContext(factory = WithMockTestUserSecurityContextFactory.class)
 public @interface WithMockTestUser {
 

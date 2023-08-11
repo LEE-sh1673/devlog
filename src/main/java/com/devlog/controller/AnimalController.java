@@ -23,8 +23,7 @@ public class AnimalController {
     // private final AnimalServiceFinder animalServiceFinder;
 
     /**
-     * 3. map (key:beanName, value:service)
-     * <bean_name, object_ref>
+     * 3. map (key:beanName, value:service) <bean_name, object_ref>
      */
     private final Map<String, AnimalService> animalServiceFinder;
 

@@ -1,11 +1,5 @@
 package com.devlog.config.handler;
 
-import static com.devlog.utils.ApiUtils.*;
-import static jakarta.servlet.http.HttpServletResponse.*;
-import static java.nio.charset.StandardCharsets.*;
-import static org.springframework.http.HttpStatus.*;
-import static org.springframework.http.MediaType.*;
-
 import java.io.IOException;
 
 import org.springframework.security.access.AccessDeniedException;
@@ -18,6 +12,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static com.devlog.utils.ApiUtils.ApiResult;
+import static com.devlog.utils.ApiUtils.error;
+import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 @RequiredArgsConstructor

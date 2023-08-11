@@ -1,19 +1,20 @@
 package com.devlog.controller;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.devlog.annotation.CustomSpringBootTest;
-import com.devlog.request.SignUpRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import com.devlog.annotation.CustomSpringBootTest;
+import com.devlog.request.SignUpRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @CustomSpringBootTest
@@ -24,7 +25,6 @@ class AuthControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
 
     @Test
     @DisplayName("회원가입")

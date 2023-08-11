@@ -1,6 +1,7 @@
 package com.devlog.response;
 
 import java.util.List;
+
 import lombok.Getter;
 
 @Getter

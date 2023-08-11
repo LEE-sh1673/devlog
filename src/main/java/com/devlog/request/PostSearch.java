@@ -24,7 +24,8 @@ public class PostSearch {
     private final Sort sort;
 
     @Builder
-    public PostSearch(final Integer page, final Integer size, final Sort.Direction direction, final String[] sort) {
+    public PostSearch(final Integer page, final Integer size, final Sort.Direction direction,
+        final String[] sort) {
         this.page = Objects.requireNonNullElse(page, INITIAL_PAGE_NUMBER);
         this.size = Objects.requireNonNullElse(size, DEFAULT_PAGE_SIZE);
         this.sort = mapSort(direction, sort);

@@ -27,7 +27,8 @@ public class EmailPasswordAuthFilter extends AbstractAuthenticationProcessingFil
         final HttpServletResponse response) throws
         AuthenticationException, IOException {
 
-        EmailPassword emailPassword = objectMapper.readValue(request.getInputStream(), EmailPassword.class);
+        EmailPassword emailPassword = objectMapper.readValue(request.getInputStream(),
+            EmailPassword.class);
 
         UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(
             emailPassword.getEmail(),

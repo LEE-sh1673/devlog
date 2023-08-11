@@ -1,7 +1,5 @@
 package com.devlog.blog;
 
-import static com.devlog.blog.QEvent.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +16,8 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
+
+import static com.devlog.blog.QEvent.event;
 
 @RequiredArgsConstructor
 public class EventRepositoryImpl implements EventRepositoryCustom {

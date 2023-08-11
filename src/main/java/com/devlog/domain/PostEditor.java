@@ -11,8 +11,8 @@ public class PostEditor {
     private final String content;
 
     public PostEditor(final String title, final String content) {
-       this.title = title;
-       this.content = content;
+        this.title = title;
+        this.content = content;
     }
 
     public static PostEditorBuilder builder() {

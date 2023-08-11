@@ -7,7 +7,8 @@ import org.springframework.security.web.DefaultSecurityFilterChain;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class JwtSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
+public class JwtSecurityConfig
+    extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
     private final JwtTokenProvider jwtTokenProvider;
 

@@ -1,18 +1,5 @@
 package com.devlog.controller;
 
-import static com.devlog.utils.ApiUtils.success;
-
-import com.devlog.config.UserPrincipal;
-import com.devlog.request.PostCreate;
-import com.devlog.request.PostEdit;
-import com.devlog.request.PostSearch;
-import com.devlog.response.PageResponse;
-import com.devlog.response.PostResponse;
-import com.devlog.service.PostService;
-import com.devlog.utils.ApiUtils;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +12,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.devlog.config.UserPrincipal;
+import com.devlog.request.PostCreate;
+import com.devlog.request.PostEdit;
+import com.devlog.request.PostSearch;
+import com.devlog.response.PageResponse;
+import com.devlog.response.PostResponse;
+import com.devlog.service.PostService;
+import com.devlog.utils.ApiUtils;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import static com.devlog.utils.ApiUtils.success;
 
 @Slf4j
 @RestController
@@ -62,7 +64,7 @@ public class PostController {
         return success(true);
     }
 
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PreAuthorize("hasRole('ROLE_ADMIN') && hasPermission(#postId, 'POST', 'DELETE')")
     @DeleteMapping("/posts/{postId}")
     public ApiUtils.ApiResult<?> delete(@PathVariable final Long postId) {

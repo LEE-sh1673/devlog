@@ -15,7 +15,9 @@ import com.devlog.annotation.CustomSpringBootTest;
 import com.devlog.annotation.WithMockTestUser;
 import com.devlog.config.AcceptanceTest;
 import com.devlog.domain.Post;
+import com.devlog.domain.User;
 import com.devlog.repository.PostRepository;
+import com.devlog.repository.UserRepository;
 import com.devlog.request.PostCreate;
 import com.devlog.request.PostEdit;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,10 +44,8 @@ class PostControllerTest extends AcceptanceTest {
     @Autowired
     private PostRepository postRepository;
 
-//    @AfterEach
-//    void tearDown() {
-//        postRepository.deleteAll();
-//    }
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     @WithMockTestUser
@@ -155,9 +155,17 @@ class PostControllerTest extends AcceptanceTest {
     @DisplayName("글 1개 조회")
     void testPosts_givenSingleReadRequest_shouldReturnPost() throws Exception {
         // given
-        Post post = postRepository.save(Post.builder()
+        final User user = userRepository.save(
+          User.builder()
+              .name("annoymous")
+              .email("test@gmail.com")
+              .build()
+        );
+
+        final Post post = postRepository.save(Post.builder()
             .title("글 제목")
             .content("글 본문")
+            .user(user)
             .build());
 
         // when
@@ -176,16 +184,18 @@ class PostControllerTest extends AcceptanceTest {
     }
 
     @Test
+    @WithMockTestUser
     @DisplayName("글 작성시 제목은 50글자 이하여야 한다.")
     void test3() throws Exception {
-
+        final User user = userRepository.findAll().get(0);
         String inputTitle = "12345".repeat(11);
-        String expectedTitle =  "12345".repeat(10);
+        String expectedTitle = "12345".repeat(10);
 
         // given
         Post post = postRepository.save(Post.builder()
             .title(inputTitle)
             .content("글 본문")
+            .user(user)
             .build());
 
         // when
@@ -205,7 +215,7 @@ class PostControllerTest extends AcceptanceTest {
     @DisplayName("글 여러개 조회")
     void testPosts_givenMultipleReadRequest_shouldReturnPostList() throws Exception {
         // given
-        List<Post> posts = postRepository.saveAll(List.of(
+        final List<Post> posts = postRepository.saveAll(List.of(
             Post.builder()
                 .title("글 제목 1")
                 .content("글 본문 1")
@@ -237,13 +247,16 @@ class PostControllerTest extends AcceptanceTest {
     }
 
     @Test
+    @WithMockTestUser
     @DisplayName("글 1페이지 조회")
     void testPosts_givenPageOneRequest_shouldReturnPostList() throws Exception {
         // given
-        List<Post> posts = IntStream.range(0, 30)
+        final User user = userRepository.findAll().get(0);
+        final List<Post> posts = IntStream.range(0, 30)
             .mapToObj(idx -> Post.builder()
                 .title("제목 " + (idx + 1))
                 .content("본문 " + (idx + 1))
+                .user(user)
                 .build()
             ).collect(Collectors.toList());
 
@@ -272,7 +285,7 @@ class PostControllerTest extends AcceptanceTest {
     @DisplayName("페이지를 0으로 요청하면 첫 페이지를 가져온다.")
     void testPosts_givenPageNumberZero_shouldReturnFirstPage() throws Exception {
         // given
-        List<Post> posts = IntStream.range(0, 30)
+        final List<Post> posts = IntStream.range(0, 30)
             .mapToObj(idx -> Post.builder()
                 .title("제목 " + (idx + 1))
                 .content("본문 " + (idx + 1))
@@ -305,12 +318,15 @@ class PostControllerTest extends AcceptanceTest {
     @DisplayName("글 수정 요청시 title 값은 필수이다.")
     void testPosts_givenNullTitleEditRequest_shouldReturnErrorResponse() throws Exception {
         // given
-        Post post = postRepository.save(Post.builder()
+        final User user = userRepository.findAll().get(0);
+        final Post post = postRepository.save(Post.builder()
             .title("글 제목")
             .content("글 본문")
-            .build());
+            .user(user)
+            .build()
+        );
 
-        PostEdit request = PostEdit.builder()
+        final PostEdit request = PostEdit.builder()
             .title(null)
             .content("수정된 본문")
             .build();
@@ -335,12 +351,15 @@ class PostControllerTest extends AcceptanceTest {
     @DisplayName("글 제목 수정")
     void testPosts_givenEditRequest_shouldEditCorrectly() throws Exception {
         // given
-        Post post = postRepository.save(Post.builder()
+        final User user = userRepository.findAll().get(0);
+        final Post post = postRepository.save(Post.builder()
             .title("글 제목")
             .content("글 본문")
-            .build());
+            .user(user)
+            .build()
+        );
 
-        PostEdit request = PostEdit.builder()
+        final PostEdit request = PostEdit.builder()
             .title("수정된 제목")
             .content("글 본문")
             .build();
@@ -365,10 +384,13 @@ class PostControllerTest extends AcceptanceTest {
     @DisplayName("글 삭제")
     void testPosts_givenDeleteRequest_shouldDeleteCorrectly() throws Exception {
         // given
-        Post post = postRepository.save(Post.builder()
+        final User user = userRepository.findAll().get(0);
+        final Post post = postRepository.save(Post.builder()
             .title("글 제목")
             .content("글 본문")
-            .build());
+            .user(user)
+            .build()
+        );
 
         // when
         ResultActions result = mockMvc.perform(

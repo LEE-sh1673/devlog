@@ -8,8 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.devlog.annotation.CustomSpringBootTest;
 import com.devlog.config.AcceptanceTest;
 import com.devlog.domain.Post;
+import com.devlog.domain.User;
 import com.devlog.errors.v2.NotFoundException;
 import com.devlog.repository.PostRepository;
+import com.devlog.repository.UserRepository;
 import com.devlog.request.PostCreate;
 import com.devlog.request.PostEdit;
 import com.devlog.request.PostSearch;
@@ -31,6 +33,9 @@ class PostServiceTest extends AcceptanceTest {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private PostService postService;
@@ -95,13 +100,19 @@ class PostServiceTest extends AcceptanceTest {
     @DisplayName("글 작성")
     void test1() {
         // given
-        PostCreate request = PostCreate.builder()
+        final User user = userRepository.save(User.builder()
+            .name("lsh")
+            .email("test@gmail.com")
+            .build()
+        );
+
+        final PostCreate request = PostCreate.builder()
             .title("글 제목")
             .content("글 본문")
             .build();
 
         // when
-        postService.save(request);
+        postService.save(user.getId(), request);
 
         // then
         assertEquals(1L, postRepository.count());

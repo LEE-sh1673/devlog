@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.devlog.annotation.CustomSpringBootTest;
 import com.devlog.annotation.WithMockTestUser;
+import com.devlog.config.AcceptanceTest;
 import com.devlog.domain.Post;
 import com.devlog.repository.PostRepository;
 import com.devlog.request.PostCreate;
@@ -41,7 +42,7 @@ import org.springframework.test.web.servlet.ResultActions;
     uriPort = 443
 )
 @ExtendWith(RestDocumentationExtension.class)
-public class PostControllerDocTest {
+public class PostControllerDocTest extends AcceptanceTest {
 
     @Autowired
     private MockMvc mockMvc;

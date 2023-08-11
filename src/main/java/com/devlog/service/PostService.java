@@ -2,8 +2,11 @@ package com.devlog.service;
 
 import com.devlog.domain.Post;
 import com.devlog.domain.PostEditor;
+import com.devlog.domain.User;
 import com.devlog.errors.v2.NotFoundException;
+import com.devlog.errors.v2.UserNotFoundException;
 import com.devlog.repository.PostRepository;
+import com.devlog.repository.UserRepository;
 import com.devlog.request.PostCreate;
 import com.devlog.request.PostEdit;
 import com.devlog.request.PostSearch;
@@ -23,13 +26,19 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostService {
 
+    private final UserRepository userRepository;
+
     private final PostRepository postRepository;
 
     private final ModelMapper modelMapper;
 
     @Transactional
-    public void save(final PostCreate postCreate) {
-        postRepository.save(modelMapper.map(postCreate, Post.class));
+    public void save(final Long userId, final PostCreate postCreate) {
+        final User user = userRepository.findById(userId)
+            .orElseThrow(UserNotFoundException::new);
+        final Post post = modelMapper.map(postCreate, Post.class);
+        post.updateUser(user);
+        postRepository.save(post);
     }
 
     @Transactional(readOnly = true)

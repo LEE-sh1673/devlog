@@ -8,7 +8,9 @@ create table Post (
   id bigint NOT NULL AUTO_INCREMENT,
   title varchar(255),
   content clob,
-  PRIMARY KEY (id)
+  user_id bigint NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT pk_post PRIMARY KEY (id)
 );
 
 create table user (
@@ -19,6 +21,9 @@ create table user (
   created_at datetime(6),
   primary key (id)
 );
+
+ALTER TABLE post ADD CONSTRAINT FK_POST_ON_USER FOREIGN KEY (user_id) REFERENCES user (id);
+
 
 create table event (
     id bigint not null auto_increment,

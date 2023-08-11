@@ -47,9 +47,7 @@ public class DatabaseCleanUpService implements InitializingBean {
 
     @Transactional
     public void execute() {
-        // 영속성 컨텍스트 내 쓰기 지연 저장소에 남은 SQL을 모두 실행
         em.flush();
-
         em.createNativeQuery("SET FOREIGN_KEY_CHECKS = 0").executeUpdate();
 
         for (String tableName : tableNames) {

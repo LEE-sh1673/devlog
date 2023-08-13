@@ -8,10 +8,11 @@ spring:
     properties:
       hibernate:
         show_sql: true
-        dialect: org.hibernate.dialect.MySQL57Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
         default_batch_fetch_size: 1000
     hibernate:
       ddl-auto: none
+    open-in-view: false
 
   sql:
     init:

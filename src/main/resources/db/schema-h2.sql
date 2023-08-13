@@ -3,6 +3,7 @@ drop table IF exists user cascade;
 drop table IF exists event cascade;
 drop table IF exists event_tag cascade;
 drop table IF exists tag cascade;
+drop table IF exists comment cascade;
 
 create table Post (
   id bigint NOT NULL AUTO_INCREMENT,
@@ -22,7 +23,20 @@ create table user (
   primary key (id)
 );
 
-ALTER TABLE post ADD CONSTRAINT FK_POST_ON_USER FOREIGN KEY (user_id) REFERENCES user (id);
+alter table post add CONSTRAINT FK_POST_ON_USER FOREIGN KEY (user_id) REFERENCES user (id);
+
+create TABLE comment (
+    id bigint not null auto_increment,
+    author VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    content VARCHAR(255) NOT NULL,
+    post_id bigint NULL,
+    CONSTRAINT pk_comment PRIMARY KEY (id)
+);
+
+alter table comment ADD CONSTRAINT FK_COMMENT_ON_POST FOREIGN KEY (post_id) REFERENCES post (id);
+
+create index IDX_COMMENT_POST_ID on comment (post_id);
 
 
 create table event (

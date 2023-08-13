@@ -68,6 +68,7 @@ public class PostService {
             .build();
     }
 
+    @Transactional
     public void delete(final Long postId) {
         postRepository.delete(findById(postId));
     }

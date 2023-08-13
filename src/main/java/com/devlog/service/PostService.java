@@ -13,11 +13,11 @@ import com.devlog.domain.PostEditor;
 import com.devlog.domain.User;
 import com.devlog.errors.v2.NotFoundException;
 import com.devlog.errors.v2.UserNotFoundException;
-import com.devlog.repository.PostRepository;
 import com.devlog.repository.UserRepository;
-import com.devlog.request.PostCreate;
-import com.devlog.request.PostEdit;
-import com.devlog.request.PostSearch;
+import com.devlog.repository.post.PostRepository;
+import com.devlog.request.post.PostCreate;
+import com.devlog.request.post.PostEdit;
+import com.devlog.request.post.PostSearch;
 import com.devlog.response.PageResponse;
 import com.devlog.response.PostResponse;
 
@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PostService {
 
     private final UserRepository userRepository;
@@ -44,13 +45,11 @@ public class PostService {
         postRepository.save(post);
     }
 
-    @Transactional(readOnly = true)
     public PostResponse findOne(final Long postId) {
         Objects.requireNonNull(postId, "postId must be provided");
         return PostResponse.of(findById(postId));
     }
 
-    @Transactional(readOnly = true)
     public PageResponse findAll(final PostSearch postSearch, final Pageable pageable) {
         Page<PostResponse> pages = postRepository.findAll(postSearch, pageable);
         return modelMapper.map(pages, PageResponse.class);
@@ -69,7 +68,6 @@ public class PostService {
             .build();
     }
 
-    @Transactional
     public void delete(final Long postId) {
         postRepository.delete(findById(postId));
     }

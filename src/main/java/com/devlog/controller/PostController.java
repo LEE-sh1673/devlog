@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devlog.config.UserPrincipal;
-import com.devlog.request.PostCreate;
-import com.devlog.request.PostEdit;
-import com.devlog.request.PostSearch;
+import com.devlog.request.post.PostCreate;
+import com.devlog.request.post.PostEdit;
+import com.devlog.request.post.PostSearch;
 import com.devlog.response.PageResponse;
 import com.devlog.response.PostResponse;
 import com.devlog.service.PostService;
@@ -68,6 +68,7 @@ public class PostController {
     @PreAuthorize("hasRole('ROLE_ADMIN') && hasPermission(#postId, 'POST', 'DELETE')")
     @DeleteMapping("/posts/{postId}")
     public ApiUtils.ApiResult<?> delete(@PathVariable final Long postId) {
+        System.out.println("[PostController] Thread.currentThread() = " + Thread.currentThread());
         postService.delete(postId);
         return success(true);
     }

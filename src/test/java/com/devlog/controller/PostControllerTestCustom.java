@@ -11,15 +11,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.devlog.annotation.CustomSpringBootTest;
+import com.devlog.annotation.CustomAcceptanceTest;
 import com.devlog.annotation.WithMockTestUser;
-import com.devlog.config.AcceptanceTest;
 import com.devlog.domain.Post;
 import com.devlog.domain.User;
-import com.devlog.repository.PostRepository;
 import com.devlog.repository.UserRepository;
-import com.devlog.request.PostCreate;
-import com.devlog.request.PostEdit;
+import com.devlog.repository.post.PostRepository;
+import com.devlog.request.post.PostCreate;
+import com.devlog.request.post.PostEdit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.hamcrest.Matchers.is;
@@ -33,9 +32,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@CustomAcceptanceTest
 @AutoConfigureMockMvc
-@CustomSpringBootTest
-class PostControllerTest extends AcceptanceTest {
+class PostControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

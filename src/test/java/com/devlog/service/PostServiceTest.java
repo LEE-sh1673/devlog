@@ -10,29 +10,25 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 
-import com.devlog.annotation.CustomSpringBootTest;
-import com.devlog.config.AcceptanceTest;
+import com.devlog.annotation.CustomAcceptanceTest;
 import com.devlog.domain.Post;
 import com.devlog.domain.User;
 import com.devlog.errors.v2.NotFoundException;
-import com.devlog.repository.PostRepository;
 import com.devlog.repository.UserRepository;
-import com.devlog.request.PostCreate;
-import com.devlog.request.PostEdit;
-import com.devlog.request.PostSearch;
+import com.devlog.repository.post.PostRepository;
+import com.devlog.request.post.PostCreate;
+import com.devlog.request.post.PostEdit;
+import com.devlog.request.post.PostSearch;
 import com.devlog.response.PageResponse;
 import com.devlog.response.PostResponse;
-
-import jakarta.transaction.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@Transactional
-@CustomSpringBootTest
-class PostServiceTest extends AcceptanceTest {
+@CustomAcceptanceTest
+class PostServiceTest {
 
     @Autowired
     private PostRepository postRepository;
@@ -96,7 +92,11 @@ class PostServiceTest extends AcceptanceTest {
             참고::테스트 격리 관련
             - https://tecoble.techcourse.co.kr/post/2020-09-15-test-isolation/
          */
-        //        postRepository.deleteAll();
+
+        // MOCK 환경에서 직접 초기화하는 경우 참조 무결성 등을 주의해야 한다.
+        // 아래 코드의 경우 두 코드의 순서가 뒤 바뀌면 오류가 발생한다.
+        // postRepository.deleteAll();
+        // userRepository.deleteAll();
     }
 
     @Test

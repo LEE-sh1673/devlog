@@ -1,4 +1,4 @@
-package com.devlog.request;
+package com.devlog.request.post;
 
 import java.util.Objects;
 

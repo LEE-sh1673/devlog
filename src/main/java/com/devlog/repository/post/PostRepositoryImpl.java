@@ -1,4 +1,4 @@
-package com.devlog.repository;
+package com.devlog.repository.post;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,7 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import com.devlog.domain.Post;
-import com.devlog.request.PostSearch;
+import com.devlog.request.post.PostSearch;
 import com.devlog.response.PostResponse;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;

@@ -10,12 +10,11 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.devlog.annotation.CustomSpringBootTest;
+import com.devlog.annotation.CustomAcceptanceTest;
 import com.devlog.annotation.WithMockTestUser;
-import com.devlog.config.AcceptanceTest;
 import com.devlog.domain.Post;
-import com.devlog.repository.PostRepository;
-import com.devlog.request.PostCreate;
+import com.devlog.repository.post.PostRepository;
+import com.devlog.request.post.PostCreate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -35,15 +34,15 @@ import static org.springframework.restdocs.snippet.Attributes.key;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@CustomAcceptanceTest
 @AutoConfigureMockMvc
-@CustomSpringBootTest
 @AutoConfigureRestDocs(
     uriScheme = "https",
     uriHost = "api.devlog.com",
     uriPort = 443
 )
 @ExtendWith(RestDocumentationExtension.class)
-public class PostControllerDocTest extends AcceptanceTest {
+public class PostControllerDocTest {
 
     @Autowired
     private MockMvc mockMvc;

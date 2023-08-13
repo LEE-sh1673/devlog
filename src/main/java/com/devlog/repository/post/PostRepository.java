@@ -1,4 +1,4 @@
-package com.devlog.repository;
+package com.devlog.repository.post;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

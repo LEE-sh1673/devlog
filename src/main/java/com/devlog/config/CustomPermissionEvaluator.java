@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 
 import com.devlog.domain.Post;
 import com.devlog.errors.v2.UserNotFoundException;
-import com.devlog.repository.PostRepository;
+import com.devlog.repository.post.PostRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

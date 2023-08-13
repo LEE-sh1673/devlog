@@ -1,5 +1,10 @@
 server:
   port: 8080
+  servlet:
+    session:
+      cookie:
+        max-age: 172800
+      timeout: 86400
 
 spring:
   jpa:
@@ -8,11 +13,8 @@ spring:
     properties:
       hibernate:
         show_sql: true
-        dialect: org.hibernate.dialect.MySQLDialect
-        default_batch_fetch_size: 1000
-    hibernate:
-      ddl-auto: none
-    open-in-view: false
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        use_sql_comments: true
 
   sql:
     init:
@@ -31,16 +33,5 @@ spring:
     username: sa
     password:
 
-  data:
-    web:
-      pageable:
-        one-indexed-parameters: true  # 웹의 요청으로 1이 들어오면 자동으로 페이지 번호를 0으로 설정해줌.
-        default-page-size: 5
-
 lsh:
-  jwt:
-    token:
-      header: Authorization
-      secret-key: ${devlog_jwt_key}
-      expire-length: 1800000
   jwt-key: ${devlog_jwt_key}

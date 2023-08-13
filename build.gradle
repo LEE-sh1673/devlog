@@ -39,9 +39,9 @@ repositories {
 
 dependencies {
 
-    //=== spring session
+    //== spring session
     implementation 'org.springframework.session:spring-session-jdbc'
-    //===
+    //==
 
     //=== spring security
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -67,25 +67,14 @@ dependencies {
     implementation 'org.modelmapper:modelmapper:3.0.0'
     //===
 
-    //== spring starters
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    //===
-
-    //=== h2
-    runtimeOnly 'com.h2database:h2'
-    //===
-
-    //=== lombok
     compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
-
-    testCompileOnly 'org.projectlombok:lombok'
-    testAnnotationProcessor 'org.projectlombok:lombok'
-    //===
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     //=== query dsl
     implementation "com.querydsl:querydsl-core:$queryDslVersion"

@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,9 +49,9 @@ public class PostService {
         return PostResponse.of(findById(postId));
     }
 
-    public PageResponse findAll(final PostSearch postSearch, final Pageable pageable) {
-        Page<PostResponse> pages = postRepository.findAll(postSearch, pageable);
-        return modelMapper.map(pages, PageResponse.class);
+    public PageResponse findAll(final PostSearch postSearch) {
+        Page<PostResponse> pages = postRepository.findAll(postSearch);
+        return PageResponse.of(pages);
     }
 
     @Transactional

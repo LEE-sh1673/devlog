@@ -1,6 +1,6 @@
 package com.devlog.request.post;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNullElse;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -17,6 +17,10 @@ public class PostSearch {
 
     private static final int MAXIMUM_PAGE_SIZE = 50;
 
+    private static final String DEFAULT_SORT_CRITERIA = "id";
+
+    private static final String DEFAULT_SORT_DIRECTION = "desc";
+
     private final int page;
 
     private final int size;
@@ -24,20 +28,25 @@ public class PostSearch {
     private final Sort sort;
 
     @Builder
-    public PostSearch(final Integer page, final Integer size, final Sort.Direction direction,
-        final String[] sort) {
-        this.page = Objects.requireNonNullElse(page, INITIAL_PAGE_NUMBER);
-        this.size = Objects.requireNonNullElse(size, DEFAULT_PAGE_SIZE);
-        this.sort = mapSort(direction, sort);
+    public PostSearch(final Integer page, final Integer size, final String sort,
+        final String dir) {
+        this.page = requireNonNullElse(page, INITIAL_PAGE_NUMBER);
+        this.size = requireNonNullElse(size, DEFAULT_PAGE_SIZE);
+        this.sort = mapSort(
+            requireNonNullElse(sort, DEFAULT_SORT_CRITERIA),
+            requireNonNullElse(dir, DEFAULT_SORT_DIRECTION)
+        );
     }
 
-    private Sort mapSort(Sort.Direction direction, String... properties) {
-        direction = Objects.requireNonNullElse(direction, Sort.Direction.DESC);
-
-        if (properties == null || properties.length == 0) {
-            return Sort.by(direction, "id");
+    private Sort mapSort(final String sort, final String direction) {
+        if (isAscending(direction)) {
+            return Sort.by(sort).ascending();
         }
-        return Sort.by(direction, properties);
+        return Sort.by(sort).descending();
+    }
+
+    private boolean isAscending(final String direction) {
+        return direction.equalsIgnoreCase(Sort.Direction.ASC.name());
     }
 
     public long getOffset() {

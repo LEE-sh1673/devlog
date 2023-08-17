@@ -1,7 +1,7 @@
 package com.devlog.controller;
 
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import static com.devlog.utils.ApiUtils.success;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,8 +26,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import static com.devlog.utils.ApiUtils.success;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -50,10 +48,9 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ApiUtils.ApiResult<PageResponse> findAll(
-        @ModelAttribute final PostSearch postSearch,
-        @PageableDefault final Pageable pageable) {
-        return success(postService.findAll(postSearch, pageable));
+    public ApiUtils.ApiResult<PageResponse>  findAll(
+        @ModelAttribute final PostSearch postSearch) {
+        return success(postService.findAll(postSearch));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

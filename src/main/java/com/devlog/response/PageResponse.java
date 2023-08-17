@@ -2,14 +2,22 @@ package com.devlog.response;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class PageResponse {
 
     private List<PostResponse> content;
 
-    private int number;
+    private int page;
 
     private int size;
 
@@ -17,5 +25,17 @@ public class PageResponse {
 
     private int totalPages;
 
-    private boolean isLast;
+    @JsonProperty("is_end")
+    private Boolean isEnd;
+
+    public static PageResponse of(final Page<PostResponse> pages) {
+        return PageResponse.builder()
+            .content(pages.getContent())
+            .page(pages.getNumber())
+            .size(pages.getSize())
+            .totalElements(pages.getTotalElements())
+            .totalPages(pages.getTotalPages())
+            .isEnd(pages.isLast())
+            .build();
+    }
 }

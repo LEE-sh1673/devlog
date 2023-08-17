@@ -1,25 +1,25 @@
 package com.devlog.repository.post;
 
+import static com.devlog.domain.QPost.post;
+import static com.devlog.utils.QueryDslUtil.getSortedColumn;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.support.PageableExecutionUtils;
 
 import com.devlog.domain.Post;
 import com.devlog.request.post.PostSearch;
 import com.devlog.response.PostResponse;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
-
-import static com.devlog.domain.QPost.post;
-import static com.devlog.utils.QueryDslUtil.getSortedColumn;
 
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepositoryCustom {
@@ -27,14 +27,13 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<PostResponse> findAll(PostSearch postSearch, Pageable pageable) {
-        List<PostResponse> pages = getContent(pageable);
-        JPAQuery<Long> countQuery = getCount();
-        return PageableExecutionUtils.getPage(pages, pageable, countQuery::fetchOne);
+    public Page<PostResponse> findAll(final PostSearch postSearch) {
+        final PageRequest pageRequest = postSearch.toPageRequest();
+        return new PageImpl<>(getContent(pageRequest), pageRequest, getCount());
     }
 
     private List<PostResponse> getContent(final Pageable pageable) {
-        List<Post> posts = jpaQueryFactory
+        final List<Post> posts = jpaQueryFactory
             .selectFrom(post)
             .offset(pageable.getOffset())
             .limit(pageable.getPageSize())
@@ -63,9 +62,10 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         );
     }
 
-    private JPAQuery<Long> getCount() {
+    private Long getCount() {
         return jpaQueryFactory
             .select(post.count())
-            .from(post);
+            .from(post)
+            .fetchOne();
     }
 }

@@ -1,13 +1,11 @@
 package com.devlog.config;
 
-import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -16,7 +14,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,16 +22,20 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.devlog.config.filter.JwtAuthenticationFilter;
-import com.devlog.config.filter.JwtExceptionFilter;
 import com.devlog.config.handler.Http401Handler;
 import com.devlog.config.handler.Http403Handler;
 import com.devlog.domain.User;
-import com.devlog.jwt.JwtClaimExtractor;
+import com.devlog.jwt.JwtAuthenticationService;
+import com.devlog.jwt.JwtClaimParser;
 import com.devlog.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Slf4j
 @Configuration
@@ -46,12 +47,27 @@ public class SecurityConfig {
 
     private final UserRepository userRepository;
 
-    private final JwtClaimExtractor claimExtractor;
+    private final JwtClaimParser jwtClaimParser;
 
     @Bean
+    @Order(1)
     @Profile("dev")
-    SecurityFilterChain h2ConsoleSecurityFilterChain(final HttpSecurity http) throws Exception {
+    public SecurityFilterChain h2ConsoleSecurityFilterChain(final HttpSecurity http)
+        throws Exception {
         http.securityMatcher(toH2Console());
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    SecurityFilterChain authorizeRequestsSecurityFilterChain(final HttpSecurity http)
+        throws Exception {
+        http.authorizeHttpRequests((httpRequests) -> httpRequests
+            .requestMatchers(antMatcher( "/**")).permitAll()
+            .requestMatchers(antMatcher( "/docs/**")).permitAll()
+            .requestMatchers(antMatcher(HttpMethod.GET, "/posts/**")).permitAll()
+            .anyRequest().authenticated()
+        );
         return http.build();
     }
 
@@ -60,83 +76,32 @@ public class SecurityConfig {
     public SecurityFilterChain defaultSecurityFilterChain(final HttpSecurity http)
         throws Exception {
         http.csrf(AbstractHttpConfigurer::disable);
-        http.headers((headers) -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
-        http.authorizeHttpRequests((httpRequests) -> httpRequests.anyRequest().permitAll());
-        http.sessionManagement((session) -> session.sessionCreationPolicy(STATELESS));
-        // http.logout((logout) -> logout
-        //     .logoutUrl("/api/v1/auth/logout")
-        //     .logoutSuccessHandler((request, response, authentication) ->
-        //         SecurityContextHolder.clearContext())
-        // );
-        return http.build();
-    }
-
-    @Bean
-    SecurityFilterChain exceptionHandlingSecurityFilterChain(final HttpSecurity http)
-        throws Exception {
+        http.headers((headers) -> headers
+            .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+        );
         http.exceptionHandling((exceptionHandling) -> exceptionHandling
             .accessDeniedHandler(new Http403Handler(objectMapper))
             .authenticationEntryPoint(new Http401Handler(objectMapper))
         );
-        return http.build();
-    }
-
-    @Bean
-    SecurityFilterChain jwtAuthenticationSecurityFilterChain(final HttpSecurity http)
-        throws Exception {
-        http.addFilterBefore(
-            jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class
+        http.sessionManagement((session) -> session
+            .sessionCreationPolicy(STATELESS)
         );
         http.addFilterBefore(
-            jwtExceptionFilter(), JwtAuthenticationFilter.class
+            jwtAuthenticationFilter(),
+            UsernamePasswordAuthenticationFilter.class
         );
         return http.build();
     }
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
-        return new JwtAuthenticationFilter(
-            claimExtractor,
-            userDetailsService()
-        );
+        return new JwtAuthenticationFilter(jwtAuthenticationService(), objectMapper);
     }
 
     @Bean
-    public JwtExceptionFilter jwtExceptionFilter() {
-        return new JwtExceptionFilter(objectMapper);
+    public JwtAuthenticationService jwtAuthenticationService() {
+        return new JwtAuthenticationService(jwtClaimParser, userDetailsService());
     }
-
-    // @Bean
-    // SecurityFilterChain emailPasswordAuthenticationSecurityFilterChain(final HttpSecurity http)
-    //     throws Exception {
-    //     http.addFilterBefore(
-    //         emailPasswordAuthFilter(),
-    //         UsernamePasswordAuthenticationFilter.class
-    //     );
-    //     return http.build();
-    // }
-
-    // @Bean
-    // public EmailPasswordAuthFilter emailPasswordAuthFilter() {
-    //     EmailPasswordAuthFilter filter = new EmailPasswordAuthFilter("/auth/login", objectMapper);
-    //
-    //     filter.setRememberMeServices(rememberMeServices());
-    //     filter.setAuthenticationManager(authenticationManager());
-    //
-    //     filter.setAuthenticationFailureHandler(new LoginFailHandler(objectMapper));
-    //     filter.setAuthenticationSuccessHandler(new LoginSuccessHandler(objectMapper));
-    //     filter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
-    //     return filter;
-    // }
-
-    // @Bean
-    // public RememberMeServices rememberMeServices() {
-    //     SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
-    //     rememberMeServices.setValiditySeconds(3600 * 24 * 30);
-    //     rememberMeServices.setRememberMeParameterName("remember");
-    //     rememberMeServices.setAlwaysRemember(true);
-    //     return rememberMeServices;
-    // }
 
     @Bean
     public AuthenticationManager authenticationManager() {

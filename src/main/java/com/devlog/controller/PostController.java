@@ -1,7 +1,5 @@
 package com.devlog.controller;
 
-import static com.devlog.utils.ApiUtils.success;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +24,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import static com.devlog.utils.ApiUtils.success;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -48,7 +48,7 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ApiUtils.ApiResult<PageResponse>  findAll(
+    public ApiUtils.ApiResult<PageResponse> findAll(
         @ModelAttribute final PostSearch postSearch) {
         return success(postService.findAll(postSearch));
     }
@@ -61,7 +61,7 @@ public class PostController {
         return success(true);
     }
 
-    //    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    // @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PreAuthorize("hasRole('ROLE_ADMIN') && hasPermission(#postId, 'POST', 'DELETE')")
     @DeleteMapping("/posts/{postId}")
     public ApiUtils.ApiResult<?> delete(@PathVariable final Long postId) {

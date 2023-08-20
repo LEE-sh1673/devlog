@@ -1,8 +1,5 @@
 package com.devlog.jwt;
 
-import static io.jsonwebtoken.SignatureAlgorithm.HS256;
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.util.Date;
 
 import javax.crypto.SecretKey;
@@ -11,17 +8,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
+import static io.jsonwebtoken.SignatureAlgorithm.HS256;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 @Getter
 @Component
 public class JwtTokenProvider {
-
-    private static final SignatureAlgorithm SIGNATURE_ALGORITHM = HS256;
 
     private final SecretKey secretKey;
 
@@ -42,7 +39,8 @@ public class JwtTokenProvider {
             .setSubject(email)
             .setIssuedAt(now)
             .setExpiration(new Date(now.getTime() + validityInMilliseconds))
-            .signWith(secretKey, SIGNATURE_ALGORITHM)
+            .signWith(secretKey, HS256)
             .compact();
     }
+
 }

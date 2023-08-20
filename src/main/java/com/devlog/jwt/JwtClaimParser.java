@@ -1,7 +1,5 @@
 package com.devlog.jwt;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.util.Date;
 import java.util.function.Function;
 
@@ -21,31 +19,33 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @Slf4j
 @Component
-public class JwtClaimExtractor {
+public class JwtClaimParser {
 
     private final SecretKey secretKey;
 
-    public JwtClaimExtractor(
+    public JwtClaimParser(
         @Value("${lsh.jwt.token.secret-key}") final String secretKey
     ) {
         this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(UTF_8));
     }
 
-    public String extractUsername(final String token) {
-        return extractClaim(token, Claims::getSubject);
+    public String parseSubject(final String token) {
+        return parseClaim(token, Claims::getSubject);
     }
 
-    public Date extractExpiration(final String token) {
-        return extractClaim(token, Claims::getExpiration);
+    public Date parseExpiration(final String token) {
+        return parseClaim(token, Claims::getExpiration);
     }
 
-    private <T> T extractClaim(final String token, final Function<Claims, T> claimsResolver) {
-        return claimsResolver.apply(extractAllClaims(token));
+    private <T> T parseClaim(final String token, final Function<Claims, T> claimsResolver) {
+        return claimsResolver.apply(parseAllClaims(token));
     }
 
-    private Claims extractAllClaims(final String token) {
+    private Claims parseAllClaims(final String token) {
         try {
             return Jwts.parserBuilder()
                 .setSigningKey(secretKey)

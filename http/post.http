@@ -2,7 +2,7 @@
 
 POST http://localhost:8080/posts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsImlhdCI6MTY5MjQ1NTUzOSwiZXhwIjoxNjkyNDU3MzM5fQ.hoqVoXfVUMaQ6bPA7B0Jpl3GF-SeuYHICzDMgoZ_E3A
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsImlhdCI6MTY5MjUyMzU4MCwiZXhwIjoxNjkyNTI1MzgwfQ.srFymoknFmPbRjf01F64wY-aL9rZZCvT3EkKmLCs1pk
 
 {
   "title": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been",
@@ -13,7 +13,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsI
 
 PATCH http://localhost:8080/posts/11
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsImlhdCI6MTY5MjQyMDEwNywiZXhwIjoxNjkyNDIxOTA3fQ.50Sr6vKWqdB2-NfBtTf2CSlXQkTfIT8AiPICFZQ306w
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsImlhdCI6MTY5MjUyMzU4MCwiZXhwIjoxNjkyNTI1MzgwfQ.srFymoknFmPbRjf01F64wY-aL9rZZCvT3EkKmLCs1pk
+#Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsImlhdCI6MTY5MjQyMDEwNywiZXhwIjoxNjkyNDIxOTA3fQ.50Sr6vKWqdB2-NfBtTf2CSlXQkTfIT8AiPICFZQ306w
 
 {
   "title": "수정된 제목 11",
@@ -23,4 +24,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsI
 ### 게시글 삭제
 
 DELETE http://localhost:8080/posts/11
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsImlhdCI6MTY5MjQyMDEwNywiZXhwIjoxNjkyNDIxOTA3fQ.50Sr6vKWqdB2-NfBtTf2CSlXQkTfIT8AiPICFZQ306w
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsImlhdCI6MTY5MjUyMzU4MCwiZXhwIjoxNjkyNTI1MzgwfQ.srFymoknFmPbRjf01F64wY-aL9rZZCvT3EkKmLCs1pk
+#Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsImlhdCI6MTY5MjQyMDEwNywiZXhwIjoxNjkyNDIxOTA3fQ.50Sr6vKWqdB2-NfBtTf2CSlXQkTfIT8AiPICFZQ306w
+
+### 게시글 조회
+
+GET http://localhost:8080/posts?page1&size=4&sort=id&dir=ASC

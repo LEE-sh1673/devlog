@@ -45,7 +45,5 @@ spring:
 lsh:
   jwt:
     token:
-      header: Authorization
       secret-key: ${devlog_jwt_key}
       expire-length: 1800000
-  jwt-key: ${devlog_jwt_key}

@@ -2,6 +2,7 @@
 
 POST http://localhost:8080/posts
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsImlhdCI6MTY5MjQ1NTUzOSwiZXhwIjoxNjkyNDU3MzM5fQ.hoqVoXfVUMaQ6bPA7B0Jpl3GF-SeuYHICzDMgoZ_E3A
 
 {
   "title": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been",
@@ -12,6 +13,7 @@ Content-Type: application/json
 
 PATCH http://localhost:8080/posts/11
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsImlhdCI6MTY5MjQyMDEwNywiZXhwIjoxNjkyNDIxOTA3fQ.50Sr6vKWqdB2-NfBtTf2CSlXQkTfIT8AiPICFZQ306w
 
 {
   "title": "수정된 제목 11",
@@ -21,3 +23,4 @@ Content-Type: application/json
 ### 게시글 삭제
 
 DELETE http://localhost:8080/posts/11
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsImlhdCI6MTY5MjQyMDEwNywiZXhwIjoxNjkyNDIxOTA3fQ.50Sr6vKWqdB2-NfBtTf2CSlXQkTfIT8AiPICFZQ306w

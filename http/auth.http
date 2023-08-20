@@ -14,8 +14,7 @@ Content-Type: application/json
 
 {
   "email": "lsh1234@gmail.com",
-  "password": "1234",
-  "remember": 1
+  "password": "1234"
 }
 
 ### 인증 페이지 요청

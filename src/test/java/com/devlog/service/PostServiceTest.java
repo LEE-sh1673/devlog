@@ -8,7 +8,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 
 import com.devlog.annotation.CustomAcceptanceTest;
 import com.devlog.domain.Post;
@@ -170,18 +169,17 @@ class PostServiceTest {
         postRepository.saveAll(posts);
 
         // when
-        PageResponse postResponses = postService.findAll(
-            PostSearch.builder().build(),
-            PageRequest.of(0, 10)
+        PageResponse postResponse = postService.findAll(
+            PostSearch.builder().build()
         );
 
         // then
-        assertEquals(0, postResponses.getNumber());
-        assertEquals(2, postResponses.getTotalPages());
-        assertEquals(10L, postResponses.getSize());
-        assertEquals(20L, postResponses.getTotalElements());
-        assertEquals("제목 20", postResponses.getContent().get(0).getTitle());
-        assertFalse(postResponses.isLast());
+        assertEquals(0, postResponse.getPage());
+        assertEquals(2, postResponse.getTotalPages());
+        assertEquals(10L, postResponse.getSize());
+        assertEquals(20L, postResponse.getTotalElements());
+        assertEquals("제목 20", postResponse.getContent().get(0).getTitle());
+        assertFalse(postResponse.getIsEnd());
     }
 
     @Test

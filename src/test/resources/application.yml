@@ -21,3 +21,9 @@ spring:
       pageable:
         one-indexed-parameters: true  # 웹의 요청으로 1이 들어오면 자동으로 페이지 번호를 0으로 설정해줌.
         default-page-size: 5
+
+lsh:
+  jwt:
+    token:
+      secret-key: UktjAbZfec6goTwhuYV6cppdp7cQ0/tQpvL3B22hIYs=
+      expire-length: 1800000

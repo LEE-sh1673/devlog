@@ -1,7 +1,5 @@
 package com.devlog.jwt;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.net.URLDecoder;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -13,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -29,7 +29,7 @@ public class AuthorizationExtractor {
             return Optional.empty();
         }
         if (log.isDebugEnabled()) {
-            log.debug("Jwt authorization api detected: {}", header);
+            log.debug("Authorization api detected: {}", header);
         }
         return checkMatch(parseHeader(header));
     }

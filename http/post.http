@@ -2,7 +2,7 @@
 
 POST http://localhost:8080/posts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsImlhdCI6MTY5MjUyMzU4MCwiZXhwIjoxNjkyNTI1MzgwfQ.srFymoknFmPbRjf01F64wY-aL9rZZCvT3EkKmLCs1pk
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsc2gxMjM0QGdtYWlsLmNvbSIsImlhdCI6MTY5MjU0MDk5MiwiZXhwIjoxNjkyNTQyNzkyfQ.qEj_gmCXiMLFSIVLJ32zmiqEYmjvrptF45sbIt4Esqk
 
 {
   "title": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been",

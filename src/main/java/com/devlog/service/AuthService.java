@@ -15,7 +15,6 @@ import com.devlog.errors.v2.UnauthorizedException;
 import com.devlog.jwt.JwtTokenProvider;
 import com.devlog.repository.UserRepository;
 import com.devlog.response.TokenResponse;
-import com.devlog.response.UserResponse;
 import com.devlog.service.dto.SignUpRequestDto;
 
 import lombok.RequiredArgsConstructor;
@@ -47,20 +46,18 @@ public class AuthService {
 
     @Transactional
     public TokenResponse login(final String email, final String password) {
-        authenticate(
+        final Authentication authentication = authenticate(
             new UsernamePasswordAuthenticationToken(email, password)
         );
-        final User user = userRepository.findByEmail(email)
-            .orElseThrow(UnauthorizedException::new);
-
-        final String token = jwtTokenProvider.generateToken(String.valueOf(user.getEmail()));
-
-        return TokenResponse.of(token, modelMapper.map(user, UserResponse.class));
+        return modelMapper.map(
+            jwtTokenProvider.generateToken(authentication),
+            TokenResponse.class
+        );
     }
 
-    private void authenticate(final Authentication authToken) {
+    private Authentication authenticate(final Authentication authToken) {
         try {
-            authenticationManager.authenticate(authToken);
+            return authenticationManager.authenticate(authToken);
         } catch (BadCredentialsException e) {
             throw new UnauthorizedException();
         }

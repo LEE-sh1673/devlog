@@ -1,6 +1,4 @@
-package com.devlog.response;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
+package com.devlog.jwt.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,14 +10,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class TokenResponse {
+public class AuthTokenDto {
 
-    @JsonProperty("access_token")
     private String accessToken;
 
-    @JsonProperty("refresh_token")
     private String refreshToken;
 
-    @JsonProperty("expires_in")
     private Long expiresIn;
 }

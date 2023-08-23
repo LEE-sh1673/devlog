@@ -39,7 +39,7 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 
 @Slf4j
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 

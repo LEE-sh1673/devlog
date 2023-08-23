@@ -1,11 +1,6 @@
 package com.devlog.controller;
 
-import static com.devlog.utils.ApiUtils.success;
-
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.web.header.Header;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +14,8 @@ import com.devlog.utils.ApiUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static com.devlog.utils.ApiUtils.success;
 
 @Slf4j
 @RestController
@@ -34,14 +31,11 @@ public class AuthController {
     }
 
     @PostMapping("/auth/login")
-    public ResponseEntity<ApiUtils.ApiResult<TokenResponse>> login(
+    public ApiUtils.ApiResult<TokenResponse> login(
         @RequestBody @Valid final LoginRequest request
     ) {
-        final TokenResponse response
-            = authService.login(request.getEmail(), request.getPassword());
-
-        return ResponseEntity.status(200)
-            .header(HttpHeaders.AUTHORIZATION, response.getToken())
-            .body(success(response));
+        return success(
+            authService.login(request.getEmail(), request.getPassword())
+        );
     }
 }
